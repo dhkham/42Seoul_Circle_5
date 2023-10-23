@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 18:56:29 by dkham             #+#    #+#             */
-/*   Updated: 2023/10/23 19:26:50 by dkham            ###   ########.fr       */
+/*   Updated: 2023/10/23 19:34:47 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,8 @@
 int main() {
     try {
         Bureaucrat highRank("High Rank", 0);
-    } catch (std::exception& e) {
-        std::cerr << e.what() << '\n';
+    } catch (std::exception& e) { // e is a reference to the caught exception object
+        std::cout << e.what() << '\n';
     }
     /*
     The first try block attempts to create a Bureaucrat object with a grade of 0, which is outside the allowed range.
@@ -27,7 +27,7 @@ int main() {
     try {
         Bureaucrat lowRank("Low Rank", 151);
     } catch (std::exception& e) {
-        std::cerr << e.what() << '\n';
+        std::cout << e.what() << '\n';
     }
 
     try {
@@ -42,7 +42,7 @@ int main() {
         bob.incrementGrade();
         std::cout << bob << std::endl;
     } catch (std::exception& e) {
-        std::cerr << e.what() << '\n';
+        std::cout << e.what() << '\n';
     }
 
     return 0;
