@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 18:55:13 by dkham             #+#    #+#             */
-/*   Updated: 2023/10/23 19:42:56 by dkham            ###   ########.fr       */
+/*   Updated: 2023/10/23 21:37:55 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,12 @@ public:
     class GradeTooLowException : public std::exception {
         const char* what() const throw();
     };
-
-    Bureaucrat(const std::string& name, int grade);
-    Bureaucrat(const Bureaucrat& other);
-    Bureaucrat& operator=(const Bureaucrat& other);
-    virtual ~Bureaucrat();
+    
+    Bureaucrat();     //default constructor
+    Bureaucrat(const std::string& name, int grade); // Constructor
+    Bureaucrat(const Bureaucrat& other); // Copy constructor
+    Bureaucrat& operator=(const Bureaucrat& other); // copy assignment operator
+    virtual ~Bureaucrat(); // Destructor
 
     const std::string& getName() const;
     int getGrade() const;
