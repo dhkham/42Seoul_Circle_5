@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 19:39:45 by dkham             #+#    #+#             */
-/*   Updated: 2023/10/23 21:34:19 by dkham            ###   ########.fr       */
+/*   Updated: 2023/10/23 21:39:49 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ public:
     class GradeTooLowException : public std::exception {
         virtual const char* what() const throw();
     };
-
+    
+    Form(); //default constructor
     Form(const std::string& name, int gradeToSign, int gradeToExecute); // Constructor
     Form(const Form& other); // Copy constructor
     Form& operator=(const Form& other); // copy assignment operator

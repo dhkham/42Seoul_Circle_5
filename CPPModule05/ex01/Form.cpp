@@ -6,12 +6,18 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 19:39:52 by dkham             #+#    #+#             */
-/*   Updated: 2023/10/23 19:58:39 by dkham            ###   ########.fr       */
+/*   Updated: 2023/10/23 21:44:21 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Form.hpp"
 #include "Bureaucrat.hpp"
+
+Form::Form() 
+: name("default"), gradeToSign(1), gradeToExecute(1) // providing default values
+{
+    std::cout << "Form default constructor called" << std::endl;
+}
 
 Form::Form(const std::string& name, int gradeToSign, int gradeToExecute)
     : name(name), signedStatus(false), gradeToSign(gradeToSign), gradeToExecute(gradeToExecute) {
