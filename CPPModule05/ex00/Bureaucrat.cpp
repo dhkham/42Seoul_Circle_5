@@ -6,11 +6,16 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 18:55:38 by dkham             #+#    #+#             */
-/*   Updated: 2023/10/23 19:10:56 by dkham            ###   ########.fr       */
+/*   Updated: 2023/10/23 21:36:24 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Bureaucrat.hpp"
+
+// default constructor
+Bureaucrat::Bureaucrat() {
+    std::cout << "Bureaucrat default constructor called" << std::endl;
+}
 
 Bureaucrat::Bureaucrat(const std::string& name, int grade)
     : name(name), grade(grade) {
@@ -21,7 +26,7 @@ Bureaucrat::Bureaucrat(const std::string& name, int grade)
     }
 }
 
-Bureaucrat::Bureaucrat(const Bureaucrat& other) 
+Bureaucrat::Bureaucrat(const Bureaucrat& other)
     : name(other.name), grade(other.grade) {}
 
 Bureaucrat& Bureaucrat::operator=(const Bureaucrat& other) {
