@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 20:15:49 by dkham             #+#    #+#             */
-/*   Updated: 2023/10/23 20:29:10 by dkham            ###   ########.fr       */
+/*   Updated: 2023/10/24 18:56:29 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,11 @@
 
 class RobotomyRequestForm : public AForm {
 public:
-    RobotomyRequestForm(const std::string& target);
-    virtual ~RobotomyRequestForm();
+    RobotomyRequestForm(); // Default constructor
+    RobotomyRequestForm(const std::string& target); // Custom constructor for setting target
+    RobotomyRequestForm(const RobotomyRequestForm& other); // Copy constructor
+    RobotomyRequestForm& operator=(const RobotomyRequestForm& other); // Copy assignment operator
+    virtual ~RobotomyRequestForm(); // Destructor
 
     virtual void execute(Bureaucrat const& executor) const;
 

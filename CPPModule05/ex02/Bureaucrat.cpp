@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 18:55:38 by dkham             #+#    #+#             */
-/*   Updated: 2023/10/23 21:39:23 by dkham            ###   ########.fr       */
+/*   Updated: 2023/10/24 19:10:55 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void Bureaucrat::signForm(AForm& form) {
 
 void Bureaucrat::executeForm(AForm const& form) {
     try {
-        form.execute(*this);
+        form.execute(*this); // run the form's execute function (passing the current bureaucrat as an argument)
         std::cout << getName() << " executed " << form.getName() << std::endl;
     } catch (std::exception& e) {
         std::cout << getName() << " couldn't execute " << form.getName() << " because: " << e.what() << std::endl;

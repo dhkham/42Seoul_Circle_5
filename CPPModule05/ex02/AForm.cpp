@@ -6,19 +6,21 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 20:19:27 by dkham             #+#    #+#             */
-/*   Updated: 2023/10/23 21:47:59 by dkham            ###   ########.fr       */
+/*   Updated: 2023/10/24 19:09:34 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Bureaucrat.hpp"
 #include "AForm.hpp"
 
+// Default constructor
 AForm::AForm() 
 : name("default"), gradeToSign(1), gradeToExecute(1) // providing default values
 {
     std::cout << "Form default constructor called" << std::endl;
 }
 
+// Constructor with target
 AForm::AForm(const std::string& name, int gradeToSign, int gradeToExecute)
     : name(name), signedStatus(false), gradeToSign(gradeToSign), gradeToExecute(gradeToExecute) {
     if (gradeToSign < 1 || gradeToExecute < 1) {
@@ -28,6 +30,21 @@ AForm::AForm(const std::string& name, int gradeToSign, int gradeToExecute)
     }
 }
 
+// Copy assignment operator
+AForm& AForm::operator=(const AForm& other) {
+    if (this != &other) {
+        // Avoid self-assignment and directly copy each field from other
+        signedStatus = other.signedStatus;
+    }
+    return *this;
+}
+
+// Copy constructor
+AForm::AForm(const AForm& other)
+    : name(other.name), signedStatus(other.signedStatus),
+      gradeToSign(other.gradeToSign), gradeToExecute(other.gradeToExecute) {}
+
+// Destructor
 AForm::~AForm() {}
 
 const std::string& AForm::getName() const {
@@ -54,9 +71,9 @@ void AForm::beSigned(const Bureaucrat& bureaucrat) {
 }
 
 void AForm::verifyExecution(const Bureaucrat& executor) const {
-    if (!signedStatus) {
+    if (!signedStatus) { // check if the form is signed
         throw AForm::NotSignedException();
-    } else if (executor.getGrade() > gradeToExecute) {
+    } else if (executor.getGrade() > gradeToExecute) { // check if the executor's grade is high enough
         throw AForm::GradeTooLowException();
     }
 }
