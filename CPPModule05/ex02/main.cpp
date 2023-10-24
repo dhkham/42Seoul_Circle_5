@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 18:56:29 by dkham             #+#    #+#             */
-/*   Updated: 2023/10/23 20:26:57 by dkham            ###   ########.fr       */
+/*   Updated: 2023/10/24 19:37:16 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 #include <ctime>
 
 int main() {
-    srand(static_cast<unsigned int>(time(nullptr))); // Seed for rand()
+    srand(static_cast<unsigned int>(time(NULL))); // Seed for rand() (time is used to get a different seed each time)
 
     Bureaucrat highRanking("High Ranker", 1);
     Bureaucrat lowRanking("Low Ranker", 150);
