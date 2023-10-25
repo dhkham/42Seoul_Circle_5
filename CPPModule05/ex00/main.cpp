@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 18:56:29 by dkham             #+#    #+#             */
-/*   Updated: 2023/10/25 20:06:32 by dkham            ###   ########.fr       */
+/*   Updated: 2023/10/25 20:09:06 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ int main() {
 
     try {
         Bureaucrat bob("Bob", 2);
-        std::cout << bob << std::endl;
+        std::cout << bob << std::endl;  // operator<< overload: print name and grade of bureaucrat
         bob.incrementGrade();           // grade: 2 -> 1
         std::cout << bob << std::endl;
         bob.decrementGrade();           // grade: 1 -> 2

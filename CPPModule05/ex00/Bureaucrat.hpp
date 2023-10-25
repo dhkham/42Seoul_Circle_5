@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 18:55:13 by dkham             #+#    #+#             */
-/*   Updated: 2023/10/25 19:45:19 by dkham            ###   ########.fr       */
+/*   Updated: 2023/10/25 20:10:12 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,6 @@ private:
     int grade;
 };
 
-std::ostream& operator<<(std::ostream& os, const Bureaucrat& bureaucrat);
+std::ostream& operator<<(std::ostream& os, const Bureaucrat& bureaucrat); // operator<< overload: print name and grade of bureaucrat
 
 #endif
