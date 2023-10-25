@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 18:56:29 by dkham             #+#    #+#             */
-/*   Updated: 2023/10/25 19:08:06 by dkham            ###   ########.fr       */
+/*   Updated: 2023/10/25 20:06:32 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,13 +15,16 @@
 int main() {
     try {
         Bureaucrat highRank("High Rank", 0);
-    } catch (std::exception& e) { // e is a reference to the caught exception object
+    } catch (std::exception& e) {
         std::cout << e.what() << '\n';
+    } catch (...) // catch all other exceptions
+    {
+        std::cout << "Unknown exception caught" << '\n';
     }
     /*
     The first try block attempts to create a Bureaucrat object with a grade of 0, which is outside the allowed range.
     This causes a GradeTooHighException to be thrown from the Bureaucrat constructor.
-    The catch block following this try block catches exceptions of type std::exception (from which GradeTooHighException is derived),
+    The catch block following this try block catches exceptions of type std::exception (from which GradeTooHighException is derived), by catching by reference.
     and prints the error message associated with the exception.
     */
     try {
@@ -33,13 +36,13 @@ int main() {
     try {
         Bureaucrat bob("Bob", 2);
         std::cout << bob << std::endl;
-        bob.incrementGrade();
+        bob.incrementGrade();           // grade: 2 -> 1
         std::cout << bob << std::endl;
-        bob.decrementGrade();
+        bob.decrementGrade();           // grade: 1 -> 2
         std::cout << bob << std::endl;
-        bob.incrementGrade();
+        bob.incrementGrade();           // grade: 2 -> 1
         std::cout << bob << std::endl;
-        bob.incrementGrade();
+        bob.incrementGrade();           // grade: 1 -> 0 : throws GradeTooHighException
         std::cout << bob << std::endl;
     } catch (std::exception& e) {
         std::cout << e.what() << '\n';

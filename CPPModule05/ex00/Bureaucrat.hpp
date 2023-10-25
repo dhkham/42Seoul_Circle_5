@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 18:55:13 by dkham             #+#    #+#             */
-/*   Updated: 2023/10/25 19:26:54 by dkham            ###   ########.fr       */
+/*   Updated: 2023/10/25 19:45:19 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,8 +18,12 @@
 
 class Bureaucrat {
 public:
-    class GradeTooHighException : public std::exception {
-        const char* what() const throw();
+    /*
+    exception class:
+    nested inside the Bureaucrat class, so that it is only visible to Bureaucrat
+    */
+    class GradeTooHighException : public std::exception { 
+        const char* what() const throw(); // const after what() means that the function doesn't modify the object. throw() means that the function doesn't throw any exceptions.
     };
 
     class GradeTooLowException : public std::exception {
