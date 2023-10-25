@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 19:39:52 by dkham             #+#    #+#             */
-/*   Updated: 2023/10/25 21:23:47 by dkham            ###   ########.fr       */
+/*   Updated: 2023/10/25 21:38:03 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,9 @@ Form::Form(const Form& other)
       gradeToSign(other.gradeToSign), gradeToExecute(other.gradeToExecute) {}
 
 Form& Form::operator=(const Form& other) {
-    signedStatus = other.signedStatus; // We can't assign 'name', 'gradeToSign', and 'gradeToExecute' since they're constant
+    if (this != &other) {
+        signedStatus = other.signedStatus; // We can't assign 'name', 'gradeToSign', and 'gradeToExecute' since they're constant
+    }
     return *this;
 }
 
