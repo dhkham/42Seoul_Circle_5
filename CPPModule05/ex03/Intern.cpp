@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/24 19:58:14 by dkham             #+#    #+#             */
-/*   Updated: 2023/10/25 18:24:15 by dkham            ###   ########.fr       */
+/*   Updated: 2023/10/25 18:49:52 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ AForm* Intern::makeForm(const std::string &formName, const std::string &target) 
         }
     }
     std::cout << "Error: Form " << formName << " not found!" << std::endl;
-    return nullptr;
+    return NULL;
 }
 /*
 makeForm takes two strings:
