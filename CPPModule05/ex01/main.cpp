@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 18:56:29 by dkham             #+#    #+#             */
-/*   Updated: 2023/10/25 19:07:22 by dkham            ###   ########.fr       */
+/*   Updated: 2023/10/25 21:24:15 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,7 @@ int main() {
     Form f1("Form1", 50, 50); // name: Form1, grade to sign: 50, grade to execute: 50
 
     // Attempting to sign with lowRank (should fail)
-    std::cout << f1 << std::endl;
+    std::cout << f1 << std::endl; // operator << overload is called
     lowRank.signForm(f1);
 
     // Attempting to sign with highRank (should succeed)

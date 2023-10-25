@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 19:39:52 by dkham             #+#    #+#             */
-/*   Updated: 2023/10/25 20:32:20 by dkham            ###   ########.fr       */
+/*   Updated: 2023/10/25 21:23:47 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,6 @@ const char* Form::GradeTooLowException::what() const throw() {
 std::ostream& operator<<(std::ostream& os, const Form& form) {
     os << form.getName() << ", form " << (form.isSigned() ? "is signed." : "is not signed.") 
        << " Required grade to sign: " << form.getGradeToSign()
-       << ", required grade to execute: " << form.getGradeToExecute() << std::endl;
+       << ", required grade to execute: " << form.getGradeToExecute();
     return os;
 }
