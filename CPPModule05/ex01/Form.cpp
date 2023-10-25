@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 19:39:52 by dkham             #+#    #+#             */
-/*   Updated: 2023/10/23 21:44:21 by dkham            ###   ########.fr       */
+/*   Updated: 2023/10/25 20:32:20 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ Form& Form::operator=(const Form& other) {
 
 Form::~Form() {}
 
+// Getters
 const std::string& Form::getName() const {
     return name;
 }
@@ -55,11 +56,12 @@ int Form::getGradeToExecute() const {
     return gradeToExecute;
 }
 
+// Member functions
 void Form::beSigned(const Bureaucrat& bureaucrat) {
-    if (bureaucrat.getGrade() > gradeToSign) {
+    if (bureaucrat.getGrade() > gradeToSign) { // if bureaucrat's grade is low, throw an exception
         throw GradeTooLowException();
     }
-    signedStatus = true;
+    signedStatus = true; // change the form status to signed if the bureaucrat’s grade is high enough
 }
 
 const char* Form::GradeTooHighException::what() const throw() {
@@ -70,6 +72,7 @@ const char* Form::GradeTooLowException::what() const throw() {
     return "Form grade too low!";
 }
 
+// Overload << operator: prints all the form's attributes
 std::ostream& operator<<(std::ostream& os, const Form& form) {
     os << form.getName() << ", form " << (form.isSigned() ? "is signed." : "is not signed.") 
        << " Required grade to sign: " << form.getGradeToSign()

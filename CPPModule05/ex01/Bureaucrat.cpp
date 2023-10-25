@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 18:55:38 by dkham             #+#    #+#             */
-/*   Updated: 2023/10/23 21:38:41 by dkham            ###   ########.fr       */
+/*   Updated: 2023/10/25 20:40:39 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,10 +74,11 @@ std::ostream& operator<<(std::ostream& os, const Bureaucrat& bureaucrat) {
 
 void Bureaucrat::signForm(Form& form) {
     try {
-        form.beSigned(*this);
+        form.beSigned(*this); // change the form status to signed if the bureaucrat’s grade is high enough
         std::cout << this->getName() << " signed " << form.getName() << std::endl;
     }
     catch (std::exception& e) {
         std::cout << this->getName() << " couldn't sign " << form.getName() << " because: " << e.what() << std::endl;
+        // beSigned throws an exception if the bureaucrat’s grade is too low, which we catch here
     }
 }
