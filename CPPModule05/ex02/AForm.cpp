@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 20:19:27 by dkham             #+#    #+#             */
-/*   Updated: 2023/10/24 19:27:32 by dkham            ###   ########.fr       */
+/*   Updated: 2023/10/26 17:40:38 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,6 +91,10 @@ const char* AForm::NotSignedException::what() const throw() {
 }
 
 std::ostream& operator<<(std::ostream& os, const AForm& form) {
-    os << "Form " << form.getName() << " (grade to sign: " << form.getGradeToSign() << ", grade to execute: " << form.getGradeToExecute() << "): " << (form.isSigned() ? "signed" : "unsigned");
+    os << form.getName() << ", form " << (form.isSigned() ? "is signed." : "is not signed.") 
+       << " Required grade to sign: " << form.getGradeToSign()
+       << ", required grade to execute: " << form.getGradeToExecute();
     return os;
 }
+
+// execute method is now pure virtual, so we can't instantiate an AForm object

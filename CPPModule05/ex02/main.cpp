@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 18:56:29 by dkham             #+#    #+#             */
-/*   Updated: 2023/10/24 19:37:16 by dkham            ###   ########.fr       */
+/*   Updated: 2023/10/25 20:04:38 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,8 +15,6 @@
 #include "ShrubberyCreationForm.hpp"
 #include "RobotomyRequestForm.hpp"
 #include "PresidentialPardonForm.hpp"
-#include <iostream>
-#include <cstdlib>
 #include <ctime>
 
 int main() {
@@ -47,7 +45,7 @@ int main() {
         lowRanking.signForm(pardon);
         highRanking.signForm(pardon);
     } catch (std::exception& e) {
-        std::cerr << e.what() << std::endl;
+        std::cout << e.what() << std::endl;
     }
 
     // Trying to execute the forms
@@ -61,7 +59,7 @@ int main() {
         lowRanking.executeForm(pardon);
         highRanking.executeForm(pardon);
     } catch (std::exception& e) {
-        std::cerr << e.what() << std::endl;
+        std::cout << e.what() << std::endl;
     }
 
     return 0;
