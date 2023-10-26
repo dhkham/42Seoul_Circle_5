@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 18:56:29 by dkham             #+#    #+#             */
-/*   Updated: 2023/10/26 19:02:26 by dkham            ###   ########.fr       */
+/*   Updated: 2023/10/26 19:24:40 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,9 +37,6 @@ int main() {
     
     highRanking.signForm(*scf);
     highRanking.executeForm(*scf);
-
-    AForm* unknown;
-    unknown = someRandomIntern.makeForm("unknown", "Bender");
 
     delete rrf;
     delete ppf;
