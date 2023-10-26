@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/23 20:17:29 by dkham             #+#    #+#             */
-/*   Updated: 2023/10/24 19:16:09 by dkham            ###   ########.fr       */
+/*   Updated: 2023/10/26 19:15:09 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,9 @@ ShrubberyCreationForm::~ShrubberyCreationForm() {}
 
 void ShrubberyCreationForm::execute(Bureaucrat const& executor) const {
     verifyExecution(executor);
-
-    std::ofstream ofs(target + "_shrubbery"); // Create a file with the target name
+    
+    std::string path = target + "_shrubbery";
+    std::ofstream ofs(path.c_str()); // Create a file with the target name
     if (ofs) { // If the file was created successfully, write to it
         ofs << "       *       " << std::endl;
         ofs << "      ***      " << std::endl;
