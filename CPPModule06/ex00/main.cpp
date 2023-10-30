@@ -6,12 +6,15 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 19:14:47 by dkham             #+#    #+#             */
-/*   Updated: 2023/10/30 19:49:40 by dkham            ###   ########.fr       */
+/*   Updated: 2023/10/30 21:30:58 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ScalarConverter.hpp"
 #include <iostream>
+
+// stod 확인, std::numeric_limits<float>::lowest() 확인
+// floor 가능한지 확인
 
 int main(int argc, char **argv) {
     if (argc != 2) {
