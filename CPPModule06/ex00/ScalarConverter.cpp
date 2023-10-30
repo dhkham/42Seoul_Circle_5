@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 19:14:14 by dkham             #+#    #+#             */
-/*   Updated: 2023/10/30 19:53:29 by dkham            ###   ########.fr       */
+/*   Updated: 2023/10/30 21:26:12 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,8 @@ void ScalarConverter::convert(const std::string &lit) {
         }
         return;  // Return here to exit the function
     } else {
-        try {
-            double doubleValue = convertToDouble(lit); // Convert the lit to double first 
+        try { // if stod throws an exception, it will be caught here
+            double doubleValue = convertToDouble(lit); // Convert the lit to double first before converting to other types
 
             try {
                 char cValue = convertToChar(doubleValue);
@@ -49,13 +49,19 @@ void ScalarConverter::convert(const std::string &lit) {
                 std::cout << "int: " << e.what() << std::endl;
             }
 
-            float fValue = convertToFloat(doubleValue);
-            std::cout << "float: " << fValue;
-            if (fValue == floor(fValue) && fValue < 1e7 && fValue > -1e7) {
-                std::cout << ".0";
+            try {
+                float fValue = convertToFloat(doubleValue);
+                std::cout << "float: " << fValue;
+                if (fValue == floor(fValue) && fValue < 1e7 && fValue > -1e7) {
+                    std::cout << ".0";
+                }
+                std::cout << "f" << std::endl;
+            } catch (const std::exception &e) {
+                std::cout << "float: " << e.what() << std::endl;
             }
-            std::cout << "f" << std::endl;
-            
+
+            // no try-catch for double because it will never throw an exception here:
+            // if stod throws an exception, it will be caught above and print "impossible" for all types
             std::cout << "double: " << doubleValue;
             if (doubleValue == static_cast<int>(doubleValue)) {
                 std::cout << ".0";
@@ -63,7 +69,10 @@ void ScalarConverter::convert(const std::string &lit) {
             std::cout << std::endl;
 
         } catch (const std::exception &e) {
-            std::cout << "Error: " << e.what() << std::endl;
+            std::cout << "char: " << "impossible" << std::endl;
+            std::cout << "int: " << "impossible" << std::endl;
+            std::cout << "float: " << "impossible" << std::endl;
+            std::cout << "doubleee: " << "impossible" << std::endl;
         }
     }
 }
