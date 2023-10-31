@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 19:13:56 by dkham             #+#    #+#             */
-/*   Updated: 2023/10/30 21:03:21 by dkham            ###   ########.fr       */
+/*   Updated: 2023/10/31 19:13:46 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #define SCALARCONVERTER_HPP
 
 #include <string>
+#include <sstream> // Needed for std::istringstream
 
 class ScalarConverter {
 public:
@@ -24,11 +25,10 @@ private:
     ScalarConverter &operator=(const ScalarConverter &);     // Copy assignment operator
     ~ScalarConverter();                                      // Destructor
 
-    static char convertToChar(double value);
-    static int convertToInt(double value);
-    static float convertToFloat(double value);
-    static double convertToDouble(const std::string &literal);
+    static char doubleToChar(double value);
+    static int doubleToInt(double value);
+    static float doubleToFloat(double value);
+    static double stringToDouble(const std::string& s);
 };
 
 #endif
-

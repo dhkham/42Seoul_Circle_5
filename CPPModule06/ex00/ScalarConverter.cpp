@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 19:14:14 by dkham             #+#    #+#             */
-/*   Updated: 2023/10/30 21:26:12 by dkham            ###   ########.fr       */
+/*   Updated: 2023/10/31 20:56:48 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void ScalarConverter::convert(const std::string &lit) {
     if (lit == "inf" || lit == "+inf" || lit == "-inf" || lit == "inff" || lit == "+inff" || lit == "-inff" || lit == "nan" || lit == "nanf") {
         std::cout << "char: impossible" << std::endl;
         std::cout << "int: impossible" << std::endl;
-
+        
         if (lit == "inf" || lit == "+inf" || lit == "inff" || lit == "+inff") {
             std::cout << "float: inff" << std::endl;
             std::cout << "double: inf" << std::endl;
@@ -30,27 +30,39 @@ void ScalarConverter::convert(const std::string &lit) {
             std::cout << "float: nanf" << std::endl;
             std::cout << "double: nan" << std::endl;
         }
-        return;  // Return here to exit the function
-    } else {
+        return;
+    } else if (lit.length() == 1) {
+        char cValue = static_cast<char>(lit[0]);
+        if (std::isprint(cValue) && !std::isdigit(cValue)) { // if the char is printable and not a digit (e.g., 'a', 'b', 'c', etc.)
+            std::cout << "char: '" << cValue << "'" << std::endl;
+        } else {
+            std::cout << "char: Non displayable" << std::endl;
+        }
+        std::cout << "int: impossible" << std::endl;
+        std::cout << "float impossible" << std::endl;
+        std::cout << "double: impossible" << std::endl;
+        return;
+    } 
+    else {
         try { // if stod throws an exception, it will be caught here
-            double doubleValue = convertToDouble(lit); // Convert the lit to double first before converting to other types
+            double doubleValue = stringToDouble(lit); // Convert the lit to double first before converting to other types
 
             try {
-                char cValue = convertToChar(doubleValue);
+                char cValue = doubleToChar(doubleValue);
                 std::cout << "char: '" << cValue << "'" << std::endl;
             } catch (const std::exception &e) {
                 std::cout << "char: " << e.what() << std::endl;
             }
 
             try {
-                int iValue = convertToInt(doubleValue);
+                int iValue = doubleToInt(doubleValue);
                 std::cout << "int: " << iValue << std::endl;
             } catch (const std::exception &e) {
                 std::cout << "int: " << e.what() << std::endl;
             }
 
             try {
-                float fValue = convertToFloat(doubleValue);
+                float fValue = doubleToFloat(doubleValue);
                 std::cout << "float: " << fValue;
                 if (fValue == floor(fValue) && fValue < 1e7 && fValue > -1e7) {
                     std::cout << ".0";
@@ -72,12 +84,28 @@ void ScalarConverter::convert(const std::string &lit) {
             std::cout << "char: " << "impossible" << std::endl;
             std::cout << "int: " << "impossible" << std::endl;
             std::cout << "float: " << "impossible" << std::endl;
-            std::cout << "doubleee: " << "impossible" << std::endl;
+            std::cout << "double: " << "impossible" << std::endl;
         }
     }
 }
 
-char ScalarConverter::convertToChar(double value) {
+double ScalarConverter::stringToDouble(const std::string& s) {
+    std::string cleanedString = s;
+
+    // If the string ends with 'f' remove it.
+    if (!cleanedString.empty() && (cleanedString[cleanedString.size() - 1] == 'f')) {
+    cleanedString = cleanedString.substr(0, cleanedString.size() - 1); // substr(startIndex, length)
+    }
+    std::istringstream iss(cleanedString);
+    double result;
+    iss >> result;
+    if (iss.fail() || !iss.eof()) {  
+        throw std::runtime_error("Failed to convert string to double");
+    }
+    return result;
+}
+
+char ScalarConverter::doubleToChar(double value) {
     if (value < std::numeric_limits<char>::min() || value > std::numeric_limits<char>::max()) // if the value is not in the range of char
         throw std::runtime_error("impossible");
     char c = static_cast<char>(value);
@@ -86,18 +114,14 @@ char ScalarConverter::convertToChar(double value) {
     return c;
 }
 
-int ScalarConverter::convertToInt(double value) {
+int ScalarConverter::doubleToInt(double value) {
     if (value < std::numeric_limits<int>::min() || value > std::numeric_limits<int>::max())
         throw std::runtime_error("impossible");
     return static_cast<int>(value);
 }
 
-float ScalarConverter::convertToFloat(double value) {
-    if (value < std::numeric_limits<float>::lowest() || value > std::numeric_limits<float>::max())
+float ScalarConverter::doubleToFloat(double value) {
+    if (value < -std::numeric_limits<float>::max() || value > std::numeric_limits<float>::max())
         throw std::runtime_error("impossible");
     return static_cast<float>(value);
-}
-
-double ScalarConverter::convertToDouble(const std::string &lit) {
-    return std::stod(lit);  // Convert the lit to double
 }
