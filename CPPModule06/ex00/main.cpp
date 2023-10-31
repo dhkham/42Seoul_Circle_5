@@ -6,14 +6,14 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 19:14:47 by dkham             #+#    #+#             */
-/*   Updated: 2023/10/31 20:50:16 by dkham            ###   ########.fr       */
+/*   Updated: 2023/10/31 20:59:53 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "ScalarConverter.hpp"
 #include <iostream>
 
-// sh tester.sh
+// remove removethis.sh
 int main(int argc, char **argv) {
     if (argc != 2) {
         std::cout << "Usage: ./convert <scalar_value>" << std::endl;
