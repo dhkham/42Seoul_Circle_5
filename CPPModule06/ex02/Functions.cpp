@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 19:26:35 by dkham             #+#    #+#             */
-/*   Updated: 2023/11/01 20:50:02 by dkham            ###   ########.fr       */
+/*   Updated: 2023/11/01 20:56:51 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,22 +69,6 @@ void identify(Base& p) {
     if (cnt == 3)
         std::cout << "Unknown type" << std::endl;
 }
-
-// void identify(Base& p) {
-//     try {
-//         A& a = dynamic_cast<A&>(p); // if dynamic cast failes, it throws an exception
-//         std::cout << "A" << std::endl;
-//         (void)a; // Avoid unused variable warning
-//     } catch (std::exception&) {
-//         try {
-//             B& b = dynamic_cast<B&>(p);
-//             std::cout << "B" << std::endl;
-//             (void)b; // Avoid unused variable warning
-//         } catch (std::exception&) {
-//             std::cout << "C" << std::endl;
-//         }
-//     }
-// }
 /*
 It prints the actual type of the object pointed to by p: "A", "B" or "C".
 Using a pointer inside this function is forbidden.
