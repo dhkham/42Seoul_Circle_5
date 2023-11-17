@@ -6,13 +6,13 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 19:26:35 by dkham             #+#    #+#             */
-/*   Updated: 2023/11/01 20:56:51 by dkham            ###   ########.fr       */
+/*   Updated: 2023/11/17 20:08:59 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "Functions.hpp"
 
-Base* generate(void) {
+Base* generate(void) { // generate a random instance of Base and return it as a Base pointer
     switch (rand() % 3) {
         // print the type of the instance created
         case 0: {
@@ -29,18 +29,19 @@ Base* generate(void) {
         }
     }
 }
-/*
-It randomly instanciates A, B or C and returns the instance as a Base pointer.
-Feel free to use anything you like for the random choice implementation.
-*/
 
+// It prints the actual type of the object pointed to by p: "A", "B" or "C".
 void identify(Base* p) {
     if (dynamic_cast<A*>(p)) std::cout << "A" << std::endl; // if dynamic cast succeeds, it returns a non-null pointer
     else if (dynamic_cast<B*>(p)) std::cout << "B" << std::endl;
     else if (dynamic_cast<C*>(p)) std::cout << "C" << std::endl;
     else std::cout << "Unknown type" << std::endl;
 }
-// It prints the actual type of the object pointed to by p: "A", "B" or "C".
+/*
+Dynamic_cast is used to convert a pointer or reference of a base class to a pointer or reference of a derived class (for safe downcasting).
+Unlike static_cast, which performs the cast at compile time without checks, dynamic_cast performs a runtime check.
+*/
+
 
 void identify(Base& p) {
     int cnt = 0;
@@ -62,14 +63,15 @@ void identify(Base& p) {
                     break;
             }
         }
-        catch (std::exception&) {
+        catch (std::exception&) { // if dynamic cast throws an exception, it means that the type is wrong
             cnt++;
         }
     }
-    if (cnt == 3)
+    if (cnt == 3) // if all dynamic casts throw an exception, it means that the type is unknown
         std::cout << "Unknown type" << std::endl;
 }
 /*
-It prints the actual type of the object pointed to by p: "A", "B" or "C".
-Using a pointer inside this function is forbidden.
+Dynamic_cast throws a std::bad_cast exception when used with "references" and the cast is invalid.
+This behavior provides a way to enforce type safety in a polymorphic class hierarchy.
+When used with "pointers", it provides a safer mechanism by returning nullptr for invalid casts, allowing the programmer to handle such cases gracefully.
 */

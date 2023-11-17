@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 19:25:47 by dkham             #+#    #+#             */
-/*   Updated: 2023/11/01 19:36:17 by dkham            ###   ########.fr       */
+/*   Updated: 2023/11/17 19:42:53 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 
 class Base {
 public:
-    virtual ~Base() {} // virtual destructor
+    virtual ~Base() {} // virtual destructor only
 };
 
 class A : public Base {}; // public inheritance

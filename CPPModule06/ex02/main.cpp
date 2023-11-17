@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/01 19:26:56 by dkham             #+#    #+#             */
-/*   Updated: 2023/11/01 20:52:08 by dkham            ###   ########.fr       */
+/*   Updated: 2023/11/17 20:07:03 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@
 int main() {
     srand(static_cast<unsigned>(time(NULL))); // seeding random number generator
 
+    // generate a random instance of Base and return it as a Base pointer
     Base* instance1 = generate();
     std::cout << "Generated instance is of type: ";
     identify(instance1);
@@ -27,6 +28,8 @@ int main() {
     std::cout << "Generated instance is of type: ";
     identify(instance2);
     delete &instance2;
+    
+    // check if wrong type
 
     return 0;
 }
