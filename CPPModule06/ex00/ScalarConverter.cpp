@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 19:14:14 by dkham             #+#    #+#             */
-/*   Updated: 2023/11/17 18:41:00 by dkham            ###   ########.fr       */
+/*   Updated: 2023/11/17 21:17:06 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ void ScalarConverter::convert(const std::string &lit) {
             try {
                 float fValue = doubleToFloat(doubleValue);
                 std::cout << "float: " << fValue;
-                if (fValue == floor(fValue) && fValue < 1e7 && fValue > -1e7) {
+                if (fValue == floor(fValue)) {
                     std::cout << ".0";
                 }
                 std::cout << "f" << std::endl;
