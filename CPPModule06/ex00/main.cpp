@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 19:14:47 by dkham             #+#    #+#             */
-/*   Updated: 2023/10/31 20:59:53 by dkham            ###   ########.fr       */
+/*   Updated: 2023/11/17 19:16:00 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,37 +23,8 @@ int main(int argc, char **argv) {
     return 0;
 }
 
-/*
-int main(){
-    // make a float value 2147483648.f
-    float f = 214.7134f;
-    //print
-    std::cout << f << std::endl;
-    // 214.713 출력
-}
-
-./convert 2147483648.f
-char: impossible
-int: impossible
-float: 2.14748e+09f
-double: 2.14748e+09
-
-./convert 2147483648
-char: impossible
-int: impossible
-float: 2.14748e+09f
-double: 2.14748e+09
-
-./convert -inff
-char: impossible
-int: impossible
-float: -inff
-double: -inf
-
-./convert -inf                                                                            
-char: impossible
-int: impossible
-float: -inff
-double: -inf
-
-*/
+// int main(){
+//     // make a float value 2147483648.f
+//     float f = 2147483648.f;
+//     std::cout << f << std::endl;
+// }

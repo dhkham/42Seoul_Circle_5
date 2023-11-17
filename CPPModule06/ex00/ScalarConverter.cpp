@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/27 19:14:14 by dkham             #+#    #+#             */
-/*   Updated: 2023/10/31 20:56:48 by dkham            ###   ########.fr       */
+/*   Updated: 2023/11/17 18:41:00 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include <cmath>
 
 void ScalarConverter::convert(const std::string &lit) {
+    // handle special cases first
     if (lit == "inf" || lit == "+inf" || lit == "-inf" || lit == "inff" || lit == "+inff" || lit == "-inff" || lit == "nan" || lit == "nanf") {
         std::cout << "char: impossible" << std::endl;
         std::cout << "int: impossible" << std::endl;
@@ -31,19 +32,20 @@ void ScalarConverter::convert(const std::string &lit) {
             std::cout << "double: nan" << std::endl;
         }
         return;
-    } else if (lit.length() == 1) {
+    // if the lit is a single char and not a digit
+    } else if (lit.length() == 1 && !std::isdigit(lit[0])) {
         char cValue = static_cast<char>(lit[0]);
         if (std::isprint(cValue) && !std::isdigit(cValue)) { // if the char is printable and not a digit (e.g., 'a', 'b', 'c', etc.)
             std::cout << "char: '" << cValue << "'" << std::endl;
-        } else {
+        } else {                                             // if the char is not printable or a digit (e.g., '\n', '\t', '\v', etc.)
             std::cout << "char: Non displayable" << std::endl;
         }
         std::cout << "int: impossible" << std::endl;
         std::cout << "float impossible" << std::endl;
         std::cout << "double: impossible" << std::endl;
         return;
-    } 
-    else {
+    }
+    else { // if the lit is a digit (e.g., '0', '1', '2', etc.)
         try { // if stod throws an exception, it will be caught here
             double doubleValue = stringToDouble(lit); // Convert the lit to double first before converting to other types
 
@@ -75,12 +77,12 @@ void ScalarConverter::convert(const std::string &lit) {
             // no try-catch for double because it will never throw an exception here:
             // if stod throws an exception, it will be caught above and print "impossible" for all types
             std::cout << "double: " << doubleValue;
-            if (doubleValue == static_cast<int>(doubleValue)) {
+            if (doubleValue == static_cast<int>(doubleValue)) { // if the double value is an integer, add ".0" to the end
                 std::cout << ".0";
             }
             std::cout << std::endl;
 
-        } catch (const std::exception &e) {
+        } catch (const std::exception &e) { // if stod throws an exception (= if the lit is not a valid double), print "impossible" for all types
             std::cout << "char: " << "impossible" << std::endl;
             std::cout << "int: " << "impossible" << std::endl;
             std::cout << "float: " << "impossible" << std::endl;
@@ -90,16 +92,16 @@ void ScalarConverter::convert(const std::string &lit) {
 }
 
 double ScalarConverter::stringToDouble(const std::string& s) {
-    std::string cleanedString = s;
+    std::string cleanedString = s; // this is called cleaned string because it will be cleaned of the 'f' at the end if it exists
 
     // If the string ends with 'f' remove it.
     if (!cleanedString.empty() && (cleanedString[cleanedString.size() - 1] == 'f')) {
     cleanedString = cleanedString.substr(0, cleanedString.size() - 1); // substr(startIndex, length)
     }
-    std::istringstream iss(cleanedString);
+    std::istringstream iss(cleanedString); // create a string stream from the cleaned string
     double result;
-    iss >> result;
-    if (iss.fail() || !iss.eof()) {  
+    iss >> result; // convert the string stream to double
+    if (iss.fail() || !iss.eof()) { // if the conversion failed or if the string stream is not completely consumed
         throw std::runtime_error("Failed to convert string to double");
     }
     return result;

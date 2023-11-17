@@ -2,12 +2,12 @@
 
 make all
 
-echo "value : 0"
-./convert 0
-echo ""
-
 echo "value : "
 ./convert ""
+echo ""
+
+echo "value : 0"
+./convert 0
 echo ""
 
 echo "value : nan"
