@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 19:49:29 by dkham             #+#    #+#             */
-/*   Updated: 2023/11/26 18:54:28 by dkham            ###   ########.fr       */
+/*   Updated: 2023/11/26 19:02:30 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,12 @@
 #include <iostream>
 #include <string>
 
+/*
+    printElement, incrementElement: 템플릿으로 안 써도 되는 것인지 확인
+    
+    Your iter function template must work with any type of array. The third parameter can be an instantiated function template.
+    -> 이 조건 만족하는지 확인
+*/
 void printElement(int const& element) {
     std::cout << element << " ";
 }
@@ -36,6 +42,6 @@ int main() {
     // Printing the modified array
     iter(intArray, intArraySize, printElement);
     std::cout << std::endl;
-
+    
     return 0;
 }
