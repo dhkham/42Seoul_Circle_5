@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 18:57:40 by dkham             #+#    #+#             */
-/*   Updated: 2023/12/05 19:35:29 by dkham            ###   ########.fr       */
+/*   Updated: 2023/12/05 19:57:54 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@
 #include <string>
 
 // Swaps the values of two given arguments.
-// template function: a function that can operate with generic types
+// function template: a function that can operate with generic types
 template<typename T>
 void swap(T& a, T& b) { // takes two references to objects as parameters
     T temp = a;
