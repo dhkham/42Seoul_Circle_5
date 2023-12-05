@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 19:49:53 by dkham             #+#    #+#             */
-/*   Updated: 2023/11/28 20:18:15 by dkham            ###   ########.fr       */
+/*   Updated: 2023/12/05 19:41:48 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 #define ITER_HPP
 
 #include <iostream>
-#include <ostream>
 
 template <typename T>
 void iter(T *array, size_t length, void (*func)(T &)) {
