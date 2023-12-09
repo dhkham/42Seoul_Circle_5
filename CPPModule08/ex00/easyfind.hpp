@@ -1,22 +1,32 @@
 #ifndef EASYFIND_HPP
 #define EASYFIND_HPP
 
-#include <algorithm>
-#include <exception>
+#include <algorithm> // Include the algorithm header for std::find
+#include <exception> // Include the exception header for std::exception
 
+// Define a custom exception class that inherits from std::exception
 class NotFoundException : public std::exception {
 public:
+    // Override the what() method to provide a custom error message
     const char* what() const throw() {
         return "Element not found in the container";
     }
 };
 
+// Define the easyfind function template
 template <typename T>
 typename T::iterator easyfind(T &container, int value) {
-    typename T::iterator it = std::find(container.begin(), container.end(), value);
+    // returns an iterator type that is appropriate for the container T.
+    // typename keyword is necessary here because T::iterator is a dependent type (its exact type depends on what T is).
+    typename T::iterator it = std::find(container.begin(), container.end(), value); // searches for 'value' in 'container' using std::find
+
+    // Check if the element was not found
     if (it == container.end()) {
+        // If the element is not found, throw the NotFoundException
         throw NotFoundException();
     }
+
+    // Return the iterator to the found element
     return it;
 }
 
