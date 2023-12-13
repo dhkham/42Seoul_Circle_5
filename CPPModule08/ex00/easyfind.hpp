@@ -1,8 +1,20 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   easyfind.hpp                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/13 20:55:29 by dkham             #+#    #+#             */
+/*   Updated: 2023/12/13 20:59:03 by dkham            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef EASYFIND_HPP
 #define EASYFIND_HPP
 
-#include <algorithm> // Include the algorithm header for std::find
-#include <exception> // Include the exception header for std::exception
+#include <algorithm>
+#include <exception>
 
 // Define a custom exception class that inherits from std::exception
 class NotFoundException : public std::exception {
