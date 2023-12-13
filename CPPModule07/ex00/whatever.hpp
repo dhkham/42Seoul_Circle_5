@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/20 18:57:40 by dkham             #+#    #+#             */
-/*   Updated: 2023/12/05 19:57:54 by dkham            ###   ########.fr       */
+/*   Updated: 2023/12/13 21:11:03 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void swap(T& a, T& b) { // takes two references to objects as parameters
 
 // Returns the smallest one. (If the two of them are equal, then it returns the second one)
 template<typename T>
-T const & min(T const & a, T const & b) { // takes two references to const objects as parameters (const: the value of the object cannot be modified, &: use of references to avoid copying the objects)
+T const & min(T const & a, T const & b) { // can accept both const and non-const arguments 
     return (b <= a) ? b : a;
 }
 
