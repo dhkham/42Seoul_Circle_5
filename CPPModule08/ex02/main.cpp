@@ -1,14 +1,16 @@
-#include "MutantStack.hpp"
-#include <iostream>
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.cpp                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/13 20:42:07 by dkham             #+#    #+#             */
+/*   Updated: 2023/12/13 20:42:08 by dkham            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-/*
-확인사항:
-- parameterized constructor 필요?
-- If you run it a first time with your MutantStack, and a second time replacing the
-MutantStack with, for example, a std::list, the two outputs should be the same. Of
-course, when testing another container, update the code below with the corresponding
-member functions (push() can become push_back()).
-*/
+#include "MutantStack.hpp"
 
 int main() {
     MutantStack<int> mstack;
@@ -36,5 +38,22 @@ int main() {
 
     std::stack<int> s(mstack); // Copying the MutantStack to a standard stack (copy constructor)
     
+    // std::list<int> lst;
+    // lst.push_back(5);
+    // lst.push_back(17);
+
+    // std::cout << lst.back() << std::endl;
+    // lst.pop_back();
+    // std::cout << lst.size() << std::endl;
+
+    // lst.push_back(3);
+    // lst.push_back(5);
+    // lst.push_back(737);
+    // lst.push_back(0);
+
+    // for (std::list<int>::iterator it = lst.begin(); it != lst.end(); ++it) {
+    //     std::cout << *it << std::endl;
+    // }
+
     return 0;
 }

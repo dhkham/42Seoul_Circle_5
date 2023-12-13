@@ -1,8 +1,22 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   MutantStack.hpp                                    :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2023/12/13 20:42:14 by dkham             #+#    #+#             */
+/*   Updated: 2023/12/13 20:42:15 by dkham            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef MUTANTSTACK_HPP
 #define MUTANTSTACK_HPP
 
 #include <stack>
+#include <list>
 #include <iterator>
+#include <iostream>
 
 // Template class MutantStack, inheriting from std::stack (template class means it can be used with any type)
 template <typename T>
@@ -10,6 +24,12 @@ class MutantStack : public std::stack<T> {
 public:
     // Default constructor: uses the constructor of std::stack
     MutantStack() : std::stack<T>() {}
+
+    // Parameterized constructor: adds a single element (e.g., MutantStackM<int> mstack(42);)
+    MutantStack(const T& value) : std::stack<T>() {
+        std::cout << "MutantStack: parameterized constructor" << std::endl;
+        this->push(value);
+    }
 
     // Copy constructor: uses the copy constructor of std::stack
     MutantStack(const MutantStack& other) : std::stack<T>(other) {}
