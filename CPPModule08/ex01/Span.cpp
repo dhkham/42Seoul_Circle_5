@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/13 20:43:06 by dkham             #+#    #+#             */
-/*   Updated: 2023/12/13 20:43:07 by dkham            ###   ########.fr       */
+/*   Updated: 2023/12/20 18:16:51 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,16 +61,16 @@ int Span::shortestSpan() const {
 }
 
 // returns the longest span between any two integers in the span
-int Span::longestSpan() const {
-    if (_numbers.size() < 2) { // if there are less than two elements in the span, there is no span
+long long Span::longestSpan() const {
+    if (_numbers.size() < 2) {
         throw std::logic_error("Not enough elements to find a span");
     }
 
-    // Define the type for the pair of iterators explicitly
-    typedef std::vector<int>::const_iterator const_iter; // const_iter is an alias for std::vector<int>::const_iterator (constant iterator means that the iterator cannot be used to modify the value it points to)
-    std::pair<const_iter, const_iter> minMax; // pair holds two const_iter objects: one for the minimum and one for the maximum
+    typedef std::vector<int>::const_iterator const_iter;
+    std::pair<const_iter, const_iter> minMax;
 
-    minMax = std::minmax_element(_numbers.begin(), _numbers.end()); // minmax_element returns a pair of iterators: one for the minimum and one for the maximum
+    minMax = std::minmax_element(_numbers.begin(), _numbers.end()); // find the minimum and maximum elements in the vector
 
-    return *minMax.second - *minMax.first; // dereference the iterators to get the longest span
+    return static_cast<long long>(*minMax.second) - *minMax.first; // return the difference between the maximum and minimum elements (cast to long long to avoid overflow)
 }
+

@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/13 20:43:22 by dkham             #+#    #+#             */
-/*   Updated: 2023/12/13 20:43:22 by dkham            ###   ########.fr       */
+/*   Updated: 2023/12/20 17:52:04 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ public:
     }
 
     int shortestSpan() const;           // returns the shortest span between any two integers in the span
-    int longestSpan() const;            // returns the longest span between any two integers in the span
+    long long longestSpan() const;      // returns the longest span between any two integers in the span
     
 private:
     std::vector<int> _numbers;          // vector of numbers in the span
