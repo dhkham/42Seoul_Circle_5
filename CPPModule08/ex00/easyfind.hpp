@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/13 20:55:29 by dkham             #+#    #+#             */
-/*   Updated: 2023/12/13 20:59:03 by dkham            ###   ########.fr       */
+/*   Updated: 2023/12/20 16:42:20 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ public:
     }
 };
 
-// Define the easyfind function template
+// Define the easyfind function template, which finds the first occurrence of a value in a container
 template <typename T>
 typename T::iterator easyfind(T &container, int value) {
     // returns an iterator type that is appropriate for the container T.
