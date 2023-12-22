@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/13 20:43:01 by dkham             #+#    #+#             */
-/*   Updated: 2023/12/20 18:24:34 by dkham            ###   ########.fr       */
+/*   Updated: 2023/12/22 14:57:03 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,12 +43,16 @@ int main() {
 
     // use template addNumber
     Span sp2 = Span(10);  // span of max 10 elements
-    int nums[] = {1, 2, 3, 4, 5};
-    std::vector<int> numbers(nums, nums + sizeof(nums) / sizeof(nums[0])); // create vector from array
+    std::vector<int> numbers;
+    for (int i = 1; i <= 5; ++i) {
+        numbers.push_back(i);
+    }
     sp2.addNumber(numbers.begin(), numbers.end()); // add numbers from vector (use template addNumber)
 
-    int moreNums[] = {6, 7, 8, 9, 10};
-    std::vector<int> moreNumbers(moreNums, moreNums + sizeof(moreNums) / sizeof(moreNums[0]));
+    std::vector<int> moreNumbers;
+    for (int i = 6; i <= 10; ++i) {
+        moreNumbers.push_back(i);
+    }
     sp2.addNumber(moreNumbers.begin(), moreNumbers.end()); // add more numbers from vector (use template addNumber)
 
     try {

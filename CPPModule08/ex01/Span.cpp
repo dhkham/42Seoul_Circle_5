@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/13 20:43:06 by dkham             #+#    #+#             */
-/*   Updated: 2023/12/20 18:16:51 by dkham            ###   ########.fr       */
+/*   Updated: 2023/12/22 14:29:29 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 Span::Span() : _maxSize(0) {}
 
 // constructor
-Span::Span(unsigned int N) : _maxSize(N) {}
+Span::Span(unsigned int N) : _maxSize(N) {} // set N as the maximum size of the span
 
 // copy constructor
 Span::Span(const Span& other) : _numbers(other._numbers), _maxSize(other._maxSize) {}
@@ -71,6 +71,6 @@ long long Span::longestSpan() const {
 
     minMax = std::minmax_element(_numbers.begin(), _numbers.end()); // find the minimum and maximum elements in the vector
 
-    return static_cast<long long>(*minMax.second) - *minMax.first; // return the difference between the maximum and minimum elements (cast to long long to avoid overflow)
+    return static_cast<long long>(*minMax.second) - static_cast<long long>(*minMax.first); // avoid overflow
 }
 
