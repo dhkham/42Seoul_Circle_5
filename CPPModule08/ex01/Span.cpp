@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/13 20:43:06 by dkham             #+#    #+#             */
-/*   Updated: 2023/12/22 14:29:29 by dkham            ###   ########.fr       */
+/*   Updated: 2023/12/22 15:13:27 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,11 +66,9 @@ long long Span::longestSpan() const {
         throw std::logic_error("Not enough elements to find a span");
     }
 
-    typedef std::vector<int>::const_iterator const_iter;
-    std::pair<const_iter, const_iter> minMax;
+    int minElem = *std::min_element(_numbers.begin(), _numbers.end());
+    int maxElem = *std::max_element(_numbers.begin(), _numbers.end());
 
-    minMax = std::minmax_element(_numbers.begin(), _numbers.end()); // find the minimum and maximum elements in the vector
-
-    return static_cast<long long>(*minMax.second) - static_cast<long long>(*minMax.first); // avoid overflow
+    return static_cast<long long>(maxElem) - static_cast<long long>(minElem);
 }
 
