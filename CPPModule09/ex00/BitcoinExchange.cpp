@@ -8,6 +8,23 @@
 // Constructor for the BitcoinExchange class.
 BitcoinExchange::BitcoinExchange() {}
 
+// Parameterized constructor for the BitcoinExchange class.
+BitcoinExchange::BitcoinExchange(const std::string& ratesFile, const std::string& inputFile) {
+    loadExchangeRatesFromCsv(ratesFile); // Load the exchange rates from the CSV file.
+    processInputFile(inputFile); // Process the input file.
+}
+
+// Copy constructor
+BitcoinExchange::BitcoinExchange(const BitcoinExchange& other) {} // Nothing to do here
+
+// Copy assignment operator
+BitcoinExchange& BitcoinExchange::operator=(const BitcoinExchange& other) {
+    return *this; // Nothing to do here
+}
+
+// Destructor
+BitcoinExchange::~BitcoinExchange() {}
+
 // Loads exchange rates from a CSV file into the exchangeRates map.
 void BitcoinExchange::loadExchangeRatesFromCsv(const std::string& filename) {
     std::ifstream file(filename); // Open the file.

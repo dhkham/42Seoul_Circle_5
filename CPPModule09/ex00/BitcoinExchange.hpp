@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 17:09:17 by dkham             #+#    #+#             */
-/*   Updated: 2023/12/23 17:48:24 by dkham            ###   ########.fr       */
+/*   Updated: 2023/12/23 19:48:13 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,11 @@
 
 class BitcoinExchange {
 public:
-    BitcoinExchange();
+    BitcoinExchange();  // Default constructor
+    BitcoinExchange(const std::string& ratesFile, const std::string& inputFile); // Parameterized constructor
+    BitcoinExchange(const BitcoinExchange& other); // Copy constructor
+    BitcoinExchange& operator=(const BitcoinExchange& other); // Copy assignment operator
+    ~BitcoinExchange(); // Destructor
     void loadExchangeRatesFromCsv(const std::string& filename);
     void processInputFile(const std::string& filename);
 
