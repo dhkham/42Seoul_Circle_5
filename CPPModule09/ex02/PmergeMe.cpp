@@ -6,389 +6,363 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 20:32:09 by dkham             #+#    #+#             */
-/*   Updated: 2023/12/27 20:32:10 by dkham            ###   ########.fr       */
+/*   Updated: 2023/12/29 16:45:25 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PmergeMe.hpp"
 
-PmergeMe::PmergeMe()
-	: mInputSequence()
-	, mJacobsthalIndexVector()
-	, mOddElement(0)
-	, mElementPairsVector()
-	, mSortedSVector()
-	, mPendingElementVector()
-	, mElementPairsList()
-	, mSortedList()
-	, mPendingElementList()
-{
-}
+PmergeMe::PmergeMe(): input()
+	, jacobsthalIndexVector()
+	, oddElement(0)
+	, elemPairsVector()
+	, mainVector()
+	, pendingVector()
+	, elemPairsList()
+	, sortedList()
+	, pendingElementList()
+{}
 
 PmergeMe::PmergeMe(const PmergeMe& other)
-	: mInputSequence(other.mInputSequence)
-	, mJacobsthalIndexVector(other.mJacobsthalIndexVector)
-	, mOddElement(other.mOddElement)
-	, mElementPairsVector(other.mElementPairsVector)
-	, mSortedSVector(other.mSortedSVector)
-	, mPendingElementVector(other.mPendingElementVector)
-	, mElementPairsList(other.mElementPairsList)
-	, mSortedList(other.mSortedList)
-	, mPendingElementList(other.mPendingElementList)
-{
-} 
+	: input(other.input)
+	, jacobsthalIndexVector(other.jacobsthalIndexVector)
+	, oddElement(other.oddElement)
+	, elemPairsVector(other.elemPairsVector)
+	, mainVector(other.mainVector)
+	, pendingVector(other.pendingVector)
+	, elemPairsList(other.elemPairsList)
+	, sortedList(other.sortedList)
+	, pendingElementList(other.pendingElementList)
+{}
 
-PmergeMe& PmergeMe::operator=(const PmergeMe& other)
-{
+PmergeMe& PmergeMe::operator=(const PmergeMe& other) {
+	
 	if (this != &other)
 	{
-		mInputSequence = other.mInputSequence;
-		mJacobsthalIndexVector = other.mJacobsthalIndexVector;
-		mOddElement = other.mOddElement;
-		mElementPairsVector = other.mElementPairsVector;
-		mSortedSVector = other.mSortedSVector;
-		mPendingElementVector = other.mPendingElementVector;
-		mElementPairsList = other.mElementPairsList;
-		mSortedList = other.mSortedList;
-		mPendingElementList = other.mPendingElementList;
+		input = other.input;
+		jacobsthalIndexVector = other.jacobsthalIndexVector;
+		oddElement = other.oddElement;
+		elemPairsVector = other.elemPairsVector;
+		mainVector = other.mainVector;
+		pendingVector = other.pendingVector;
+		elemPairsList = other.elemPairsList;
+		sortedList = other.sortedList;
+		pendingElementList = other.pendingElementList;
 	}
 	return (*this);
 }
 
 PmergeMe::~PmergeMe()
-{
-}
+{}
 
-void PmergeMe::IsValidInput(int argc, char** argv)
-{
-	if (argc == 1)
-	{
+void PmergeMe::checkValidInput(int argc, char** argv) {
+	// check number of arguments
+	if (argc < 2) {
 		throw (std::invalid_argument("Error: No input arguments provided."));
 	}
 
-	for (int index = 1; index < argc; index++)
-	{
-		if (IsPositiveInteger(argv[index]) == true)
-		{
-			mInputSequence.push_back(std::atoi(argv[index]));
+	// check if all arguments are positive integers
+	for (int index = 1; index < argc; index++) {
+		if (isPositiveInteger(argv[index]) == true) { // if positive integer, add to input sequence
+			input.push_back(std::atoi(argv[index]));
 		}
 	}
 }
 
-bool PmergeMe::IsPositiveInteger(const std::string& inputString)
-{
+// *** iss.fail() 필요한지 확인 ***
+bool PmergeMe::isPositiveInteger(const std::string& inputString) {
 	std::istringstream iss(inputString);
 
 	int value;
+	iss >> value; // try to read the value as an integer
 
-	iss >> value;
-
-	if (iss.eof() == false)
-	{
+	// check if the entire string was read (no non-numeric characters)
+	if (iss.eof() == false) {
 		throw std::invalid_argument("Error: \"" + inputString + "\" contains non-numeric characters.");
 	}
-
-	if (iss.fail() == true)
-	{
+	// check if the value is a positive integer
+	if (iss.fail() == true) {
 		throw std::invalid_argument("Error: \"" + inputString + "\" is not a valid integer.");
 	}
-
-	if (value < 0)
-	{
+	// check if the value is positive
+	if (value < 0) {
 		throw std::invalid_argument("Error: \"" + inputString + "\" is not a positive integer.");
 	}
 	return (true);
 }
 
-void PmergeMe::SortUsingContainer()
-{
-	double vecTime = MeasureTimeForVector();
-	double listTime = MeasureTimeForList();
+void PmergeMe::runSort() {
+	double vectorTime = runSortForVector();
+	double listTime = runSortForList();
 
-	PrintProcessingTime("vector", vecTime);
-	PrintProcessingTime("list", listTime);
+	printTime("vector", vectorTime);
+	printTime("list", listTime);
 }
 
-double PmergeMe::MeasureTimeForVector()
-{
-	clock_t start = clock();
-	MergeInsertionSortVector();
-	clock_t end = clock();
+double PmergeMe::runSortForVector() {
+	clock_t start = clock();	// clock() returns the number of clock ticks elapsed since the program was launched
+	fordJohnsonVector(); 		// Sort the input sequence using merge-insertion sort
+	clock_t end = clock();		// get the number of clock ticks elapsed since the start of the sorting process
 	
-	double elapsedTime = (double)(end - start) / CLOCKS_PER_SEC * 1000000;
-
+	double elapsedTime = (double)(end - start) / CLOCKS_PER_SEC * 1000000; // convert clock ticks to microseconds
 	return (elapsedTime);
 }
 
-void PmergeMe::MakePairs()
-{
-	mElementPairsVector.clear();
-	mElementPairsList.clear();
+void PmergeMe::createPairs() {
+    // Clear any existing content in the element pairs vectors and lists
+    elemPairsVector.clear();
+    elemPairsList.clear();
 
-	for(size_t index = 0; index < mInputSequence.size() - 1; index += 2)
-	{
-		if(mInputSequence[index] < mInputSequence[index + 1])
-		{
-			std::pair<int, int> pair = std::make_pair(mInputSequence[index + 1], mInputSequence[index]);
-			mElementPairsVector.push_back(pair);
-			mElementPairsList.push_back(pair);
-		}
-		else
-		{
-			std::pair<int, int> pair = std::make_pair(mInputSequence[index], mInputSequence[index + 1]);
-			mElementPairsVector.push_back(pair);
-			mElementPairsList.push_back(pair);
-		}
-	}
+    // Iterate over the input in steps of 2 (skip the last element if the size is odd)
+    for (size_t i = 0; i < input.size() - 1; i += 2) {
+        std::pair<int, int> pair;
 
-	if (mInputSequence.size() % 2 != 0)
-	{
-		mOddElement = mInputSequence[mInputSequence.size() - 1];
-	}
-}
-
-void PmergeMe::GenerateJacobsthalIndexes(int pendingElementSize)
-{
-	mJacobsthalIndexVector.clear();
-
-    if (pendingElementSize < 1)
-    {
-        return ; 
-    }
-
-    std::vector<int> jacobsthalNumbers;
-    int index = 1;
-    while(true) 
-    {	
-		index++;
-        int number = Jacobsthal(index);
-        jacobsthalNumbers.push_back(number);
-        if(number > pendingElementSize)
-			break;
-    }  
-
-    std::set<int> used;
-    mJacobsthalIndexVector.push_back(1);
-    used.insert(1);
-
-    int number = jacobsthalNumbers.front();
-    while(true)
-    {
-        if (used.find(number) == used.end())
-        {
-            mJacobsthalIndexVector.push_back(number);
-            used.insert(number);
-            number--;
+        // Check if the current element is less than the next element
+        if (input[i] < input[i + 1]) {
+            // If so, create a pair with the elements in ascending order
+            pair = std::make_pair(input[i + 1], input[i]);
         }
-        else
-        {
-            if(jacobsthalNumbers.empty())
-			{
-                break;
-			}
-			number = jacobsthalNumbers.front();
-            if(number > pendingElementSize)
-			{
-                number = pendingElementSize;
-			}
-			jacobsthalNumbers.erase(jacobsthalNumbers.begin());
+        else {
+            // Otherwise, create a pair with the elements in their original order
+            pair = std::make_pair(input[i], input[i + 1]);
         }
-    }
-}
-
-int PmergeMe::Jacobsthal(int n)
-{
-    if (n == 0)
-    {
-        return (0);
-    }
-    if (n == 1)
-    {
-        return (1);
+        // Add this pair to both the vector and list containers
+        elemPairsVector.push_back(pair);
+        elemPairsList.push_back(pair);
     }
     
+    // Check if the size of the input is odd
+    if (input.size() % 2 != 0) {
+        oddElement = input[input.size() - 1]; // If so, store the last element as the odd element
+    }
+}
+
+void PmergeMe::createJacobsthalIndexes(int pendingElementSize) {
+    // Clear the existing Jacobsthal index vector
+    jacobsthalIndexVector.clear();
+
+    // If pendingElementSize is less than 1, no indexes are needed
+    if (pendingElementSize < 1)
+        return;
+
+    // Generate Jacobsthal numbers greater than pendingElementSize
+    std::vector<int> jacobsthalNumbers;
+    int i = 1;
+    while (true) {
+        i++;
+        int number = jacobsthal(i); // Compute the ith Jacobsthal number
+        jacobsthalNumbers.push_back(number); // Add it to the vector
+        if (number > pendingElementSize) // If jacobsthal(i) is greater than pendingElementSize, stop
+            break;
+    }  
+
+    // Set for tracking used numbers to avoid duplicates
+    std::set<int> used;
+    // Start with the first index
+    jacobsthalIndexVector.push_back(1);
+    used.insert(1);
+
+    // Initialize number with the first Jacobsthal number
+    int number = jacobsthalNumbers.front();
+    // Populate the Jacobsthal index vector
+    while (true) {
+        if (used.find(number) == used.end()) {
+            jacobsthalIndexVector.push_back(number);
+            used.insert(number);
+            number--;
+        } else {
+            // If no more Jacobsthal numbers, break the loop
+            if (jacobsthalNumbers.empty())
+                break;
+            // Update number to the next Jacobsthal number
+            number = jacobsthalNumbers.front();
+            if (number > pendingElementSize) {
+                number = pendingElementSize;
+            }
+            jacobsthalNumbers.erase(jacobsthalNumbers.begin());
+        }
+    }
+}
+
+int PmergeMe::jacobsthal(int n) {
+    // Base cases: return the first two numbers of Jacobsthal sequence
+    if (n == 0)
+        return 0;
+
+    if (n == 1)
+        return 1;
+    
+    // Variables for storing previous and current terms in the sequence
     int twoTermsAgo = 0;
     int previousTerm = 1;
     int currentTerm = 0;
 
-    for (int index = 2; index <= n; index++) 
-    {
+    // Iteratively calculate the Jacobsthal number up to n
+    for (int index = 2; index <= n; index++) {
         currentTerm = previousTerm + 2 * twoTermsAgo;
         
+        // Update terms for next iteration
         twoTermsAgo = previousTerm;
         previousTerm = currentTerm;
     }
 
-    return (currentTerm);
+    // Return the nth Jacobsthal number
+    return currentTerm;
 }
 
-void PmergeMe::MergeInsertionSortVector()
-{
+void PmergeMe::fordJohnsonVector() {
 	std::cout << MAGENTA << "After: " << RESET;
-	PrintInPutSequence();
+	printInput();
 
-	std::cout << BLUE << "MakePairs..." << RESET << std::endl;
-	MakePairs();
-		PrintPairVector();
+	std::cout << BLUE << "createPairs..." << RESET << std::endl;
+	createPairs();
+	printPairsVector();
 
-	std::cout << BLUE << "MergeSortVector..." << RESET << std::endl;
-	MergeSortVector(0, mElementPairsVector.size() - 1);
-		PrintPairVector();
+	std::cout << BLUE << "mergeSortVector..." << RESET << std::endl;
+	mergeSortVector(0, elemPairsVector.size() - 1);
+	printPairsVector();
 
-	std::cout << BLUE << "SplitElementPairsVector..." << RESET << std::endl;
-    SplitElementPairsVector();
-		PrintAfterSplitVector();
-
-	InsertSortVector();
+	std::cout << BLUE << "splitPairsToMainPendingVector..." << RESET << std::endl;
+    splitPairsToMainPendingVector();
+	printAfterSplitVector();
+	
+	std::cout << BLUE << "insertionSortVector..." << RESET << std::endl;
+	insertionSortVector();
 
 	std::cout << MAGENTA << "RESULT: " << RESET;
-		PrintSortedSequenceVector();
+	printMainVector();
 }
 
-void PmergeMe::SplitElementPairsVector()
-{
-	mSortedSVector.clear();
-	mPendingElementVector.clear();
+void PmergeMe::splitPairsToMainPendingVector() {
+	mainVector.clear();
+	pendingVector.clear();
 
-    for (size_t index = 0; index < mElementPairsVector.size(); index++)
-	{
-        mSortedSVector.push_back(mElementPairsVector[index].first);
-        mPendingElementVector.push_back(mElementPairsVector[index].second);
+    for (size_t i = 0; i < elemPairsVector.size(); i++) {
+        mainVector.push_back(elemPairsVector[i].first);
+        pendingVector.push_back(elemPairsVector[i].second);
     }
 }
 
-void PmergeMe::MergeSortVector(int left, int right)
-{
-	if (left >= right)
-	{
-		return ;
-	}
+void PmergeMe::mergeSortVector(int left, int right) {
+    // Base case: if the range is zero or negative, no sorting is needed
+    if (left >= right)
+        return;
+    
+    // Calculate the middle index of the current range (divide and conquer)
+	int mid = left + (right - left) / 2; // avoid overflow
 	
-	int mid = (left + right) / 2;
+    // Recursively apply merge sort to the left half of the range
+    mergeSortVector(left, mid);
 
-	MergeSortVector(left, mid);
-	MergeSortVector(mid + 1, right);
-	MergingVector(left, mid, right);
+    // Recursively apply merge sort to the right half of the range
+    mergeSortVector(mid + 1, right);
+
+    // Merge the two halves together
+    mergeSortedHalves(left, mid, right);
 }
 
-void PmergeMe::MergingVector(int left, int mid, int right)
-{
-	int sizeLeft = mid - left + 1;
-	int sizeRight = right - mid;
+void PmergeMe::mergeSortedHalves(int left, int mid, int right) {
+    // Calculate sizes of two sub-vectors to be merged
+    int leftSize = mid - left + 1;
+    int Rightsize = right - mid;
 
-	std::vector<std::pair<int, int> > leftPair(sizeLeft);
-	std::vector<std::pair<int, int> > rightPair(sizeRight);
+    // Create temporary vectors for left and right halves
+    std::vector<std::pair<int, int> > leftPair(leftSize);
+    std::vector<std::pair<int, int> > rightPair(Rightsize);
 
-	for (int index = 0; index < sizeLeft; index++)
-	{
-		leftPair[index] = mElementPairsVector[left + index];
-	}
-	for (int index = 0; index < sizeRight; index++)
-	{
-		rightPair[index] = mElementPairsVector[mid + 1 + index];
-	}
+    // Copy data to temporary vectors
+    for (int i = 0; i < leftSize; i++) {
+        leftPair[i] = elemPairsVector[left + i];
+    }
+    for (int i = 0; i < Rightsize; i++) {
+        rightPair[i] = elemPairsVector[mid + 1 + i];
+    }
 
-    int indexLeft = 0;
-    int indexRight = 0;
-    int mergeIndex = left;
+    // Indices for traversing the temporary vectors and the merge index for the original vector
+    int indexLeft = 0, indexRight = 0, mergeIndex = left;
 
-    while (indexLeft < sizeLeft && indexRight < sizeRight)
-    {
-        if (leftPair[indexLeft].first <= rightPair[indexRight].first)
-        {
-            mElementPairsVector[mergeIndex] = leftPair[indexLeft];
-            indexLeft++;
-        }
-        else
-        {
-            mElementPairsVector[mergeIndex] = rightPair[indexRight];
-            indexRight++;
+    // Merge the temporary vectors back into elemPairsVector
+    while (indexLeft < leftSize && indexRight < Rightsize) {
+        if (leftPair[indexLeft].first <= rightPair[indexRight].first) { // compare the first elements of the pairs
+            elemPairsVector[mergeIndex] = leftPair[indexLeft++]; // if the left element is smaller, copy it to elemPairsVector
+        } else { 
+            elemPairsVector[mergeIndex] = rightPair[indexRight++]; // otherwise, copy the right element to elemPairsVector
         }
         mergeIndex++;
     }
 
-    while (indexLeft < sizeLeft)
-    {
-        mElementPairsVector[mergeIndex] = leftPair[indexLeft];
-        indexLeft++;
-        mergeIndex++;
+    // Copy the remaining elements of leftPair, if any
+    while (indexLeft < leftSize) {	// if there are any elements left in the leftPair vector, copy them to elemPairsVector
+        elemPairsVector[mergeIndex++] = leftPair[indexLeft++];
     }
 
-    while (indexRight < sizeRight)
-    {
-        mElementPairsVector[mergeIndex] = rightPair[indexRight];
-        indexRight++;
-        mergeIndex++;
+    // Copy the remaining elements of rightPair, if any
+    while (indexRight < Rightsize) { // if there are any elements left in the rightPair vector, copy them to elemPairsVector
+        elemPairsVector[mergeIndex++] = rightPair[indexRight++];
     }
 }
 
-void PmergeMe::InsertSortVector()
-{
-	std::cout << BLUE << "GenerateJacobsthalIndexes ..." << RESET << std::endl;
-	GenerateJacobsthalIndexes(mPendingElementVector.size());
-		PrintJacobsthalIndex();
+void PmergeMe::insertionSortVector() {
+	std::cout << BLUE << "createJacobsthalIndexes ..." << RESET << std::endl;
+	// create jacobsthal indexes
+	createJacobsthalIndexes(pendingVector.size());
+	printJacobsthalIndex();
 	
-	InsertElementsUsingJacobsthalIndexesVector();
-    InsertOddElementVector();
+	// insert elements using jacobsthal indexes
+	insertElemWithJacobsthalIndexesVector();
+    insertOddElemVector();
 }
 
-void PmergeMe::InsertElementsUsingJacobsthalIndexesVector()
-{
-	for (size_t index = 0; index < mJacobsthalIndexVector.size(); ++index)
+void PmergeMe::insertElemWithJacobsthalIndexesVector() {
+	for (size_t index = 0; index < jacobsthalIndexVector.size(); ++index)
 		{
-			int jacobsthalIndex = mJacobsthalIndexVector[index];
-			int value = mPendingElementVector[jacobsthalIndex - 1];
-			int position = BinarySearchVector(value);
+			int jacobsthalIndex = jacobsthalIndexVector[index];
+			int value = pendingVector[jacobsthalIndex - 1];
+			int position = binarySearchVector(value);
 
 			PrintInsertionDetails(jacobsthalIndex, value, position);
-			std::cout << GREEN << "Before: " << RESET;
-			PrintSortedSequenceVector();
+			std::cout << "Before: " << RESET;
+			printMainVector();
 
-			mSortedSVector.insert(mSortedSVector.begin() + position, value);
+			mainVector.insert(mainVector.begin() + position, value);
 
-			std::cout << GREEN << "After: " << RESET;
-			PrintSortedSequenceVector();
+			std::cout << "After: " << RESET;
+			printMainVector();
 		}
-		mPendingElementVector.clear();
+		pendingVector.clear();
 }
 
-int PmergeMe::BinarySearchVector(int value)
-{
+int PmergeMe::binarySearchVector(int value) {
 	int left = 0;
-	int right = mSortedSVector.size() - 1;
+	int right = mainVector.size() - 1;
 
 	while (left <= right)
 	{
 		int mid = (left + right) / 2;
-		if (mSortedSVector[mid] == value)
-		{
+		if (mainVector[mid] == value) {
 			return (mid);
 		}
-		else if (mSortedSVector[mid] < value)
-		{
+		else if (mainVector[mid] < value) {
 			left = mid + 1;
 		}
-		else
-		{
+		else {
 			right = mid - 1;
 		}
 	}
 		return (left);
 }
 
-void PmergeMe::InsertOddElementVector()
-{
-    if (mInputSequence.size() % 2 != 0)
+void PmergeMe::insertOddElemVector() {
+    if (input.size() % 2 != 0)
 	{
-        int position = BinarySearchVector(mOddElement);
-        mSortedSVector.insert(mSortedSVector.begin() + position, mOddElement);
+        int position = binarySearchVector(oddElement);
+        mainVector.insert(mainVector.begin() + position, oddElement);
     }
 }
 
-double PmergeMe::MeasureTimeForList()
-{
+double PmergeMe::runSortForList() {
 	clock_t start = clock();
-	MergeInsertionSortList();
+	fordJohnsonList();
 	clock_t end = clock();
 	
 	double elapsedTime = (double)(end - start) / CLOCKS_PER_SEC * 1000000;
@@ -396,110 +370,97 @@ double PmergeMe::MeasureTimeForList()
 	return (elapsedTime);
 }
 
-void PmergeMe::MergeInsertionSortList()
-{
-	std::cout << RED << "After: " << RESET;
-	PrintInPutSequence();
+void PmergeMe::fordJohnsonList() {
+	std::cout << "After: " << RESET;
+	printInput();
 
-	std::cout << BLUE << "MakePairs..." << RESET << std::endl;
-	MakePairs();
-		PrintPairList();
+	std::cout << BLUE << "createPairs..." << RESET << std::endl;
+	createPairs();
+	printPairsList();
 
-	std::cout << BLUE << "MergeSortList..." << RESET << std::endl;
-	MergeSortList(mElementPairsList.begin(), mElementPairsList.end());
-		PrintPairList();
+	std::cout << BLUE << "mergeSortList..." << RESET << std::endl;
+	mergeSortList(elemPairsList.begin(), elemPairsList.end());
+	printPairsList();
 
-	std::cout << BLUE << "SplitElementPairsList..." << RESET << std::endl;
-    SplitElementPairsList();
-		PrintAfterSplitList();
+	std::cout << BLUE << "splitPairsToMainPendingList..." << RESET << std::endl;
+    splitPairsToMainPendingList();
+	printAfterSplitList();
 
-	InsertSortList();
+	insertionSortList();
 
-	std::cout << RED << "RESULT: " << RESET;
-		PrintSortedSequenceList();
+	std::cout << "RESULT: " << RESET;
+	printMainList();
 }
 
-void PmergeMe::SplitElementPairsList()
-{
-	mSortedList.clear();
-	mPendingElementList.clear();
-	for (std::list<std::pair<int, int> >::iterator it = mElementPairsList.begin(); it != mElementPairsList.end(); ++it)
-	{
-		mSortedList.push_back(it->first);
-		mPendingElementList.push_back(it->second);
+void PmergeMe::splitPairsToMainPendingList() {
+	sortedList.clear();
+	pendingElementList.clear();
+	for (std::list<std::pair<int, int> >::iterator it = elemPairsList.begin(); it != elemPairsList.end(); ++it) {
+		sortedList.push_back(it->first);
+		pendingElementList.push_back(it->second);
 	}
 }
 
-void PmergeMe::MergeSortList(std::list<std::pair<int, int> >::iterator left, std::list<std::pair<int, int> >::iterator right)
-{
+void PmergeMe::mergeSortList(std::list<std::pair<int, int> >::iterator left, std::list<std::pair<int, int> >::iterator right) {
 	std::list<std::pair<int, int> >::iterator nextLeft = left;
     nextLeft++;
 
-    if (left == right || nextLeft == right)
-    {
+    if (left == right || nextLeft == right) {
         return;
     }
 
 	std::list<std::pair<int, int> >::iterator mid = left;
 	std::advance(mid, std::distance(left, right) / 2);
 
-	MergeSortList(left, mid);
-	MergeSortList(mid, right);
+	mergeSortList(left, mid);
+	mergeSortList(mid, right);
 	MergingList(left, mid, right);
 }
 
-void PmergeMe::MergingList(std::list<std::pair<int, int> >::iterator left, std::list<std::pair<int, int> >::iterator mid, std::list<std::pair<int, int> >::iterator right)
-{
+void PmergeMe::MergingList(std::list<std::pair<int, int> >::iterator left, std::list<std::pair<int, int> >::iterator mid, std::list<std::pair<int, int> >::iterator right) {
 	std::list<std::pair<int, int> > tempList;
 
 	std::list<std::pair<int, int> >::iterator leftPair = left;
 	std::list<std::pair<int, int> >::iterator rightPair = mid;
 
-	while (leftPair != mid && rightPair != right)
-	{
-		if (leftPair->first <= rightPair->first)
-		{
+	while (leftPair != mid && rightPair != right) {
+		if (leftPair->first <= rightPair->first) {
 			tempList.push_back(*leftPair);
 			leftPair++;
 		}
-		else
-		{
+		else {
 			tempList.push_back(*rightPair);
 			rightPair++;
 		}
 	}
 
-	while (leftPair != mid)
-	{
+	while (leftPair != mid) {
 		tempList.push_back(*leftPair);
 		leftPair++;
 	}
 
-	while (rightPair != right)
-	{
+	while (rightPair != right) {
 		tempList.push_back(*rightPair);
 		rightPair++;
 	}
 	std::copy(tempList.begin(), tempList.end(), left);
 }
 
-void PmergeMe::InsertSortList()
-{
-	std::cout << BLUE << "GenerateJacobsthalIndexes ..." << RESET << std::endl;
-	GenerateJacobsthalIndexes(mPendingElementList.size());
-		PrintJacobsthalIndex();
+void PmergeMe::insertionSortList() {
+	std::cout << BLUE << "createJacobsthalIndexes ..." << RESET << std::endl;
+	createJacobsthalIndexes(pendingElementList.size());
+		printJacobsthalIndex();
 
 	InsertElementsUsingJacobsthalIndexesList();
     InsertOddElementList();
 }
 
-void PmergeMe::InsertElementsUsingJacobsthalIndexesList()
-{
-    for (size_t index = 0; index < mJacobsthalIndexVector.size(); ++index) 
+void PmergeMe::InsertElementsUsingJacobsthalIndexesList() {
+    for (size_t index = 0; index < jacobsthalIndexVector.size(); ++index) 
     {
-        int jacobsthalIndex = mJacobsthalIndexVector[index];
+        int jacobsthalIndex = jacobsthalIndexVector[index];
 
-        std::list<int>::iterator valueIt = mPendingElementList.begin();
+        std::list<int>::iterator valueIt = pendingElementList.begin();
         std::advance(valueIt, jacobsthalIndex - 1);
         int value = *valueIt;
 
@@ -507,48 +468,46 @@ void PmergeMe::InsertElementsUsingJacobsthalIndexesList()
 
         PrintInsertionDetails(jacobsthalIndex, value, position);
 		
-		std::cout << GREEN << "Before: " << RESET;
-		PrintSortedSequenceList();
+		std::cout << "Before: " << RESET;
+		printMainList();
 
-        std::list<int>::iterator it = mSortedList.begin();
+        std::list<int>::iterator it = sortedList.begin();
         std::advance(it, position);
-        mSortedList.insert(it, value);
+        sortedList.insert(it, value);
 
-		std::cout << GREEN << "After: " << RESET;
-		PrintSortedSequenceList();
+		std::cout << "After: " << RESET;
+		printMainList();
     }
 
-    mPendingElementList.clear();
+    pendingElementList.clear();
 }
 
 
-void PmergeMe::InsertOddElementList()
-{
-    if (mInputSequence.size() % 2 != 0)
+void PmergeMe::InsertOddElementList() {
+    if (input.size() % 2 != 0)
 	{
-        int position = BinarySearchList(mOddElement);
+        int position = BinarySearchList(oddElement);
 
-        std::list<int>::iterator it = mSortedList.begin();
+        std::list<int>::iterator it = sortedList.begin();
         std::advance(it, position);
-        mSortedList.insert(it, mOddElement);
+        sortedList.insert(it, oddElement);
 
     }
 }
 
-int PmergeMe::BinarySearchList(int value)
-{
-    if (mSortedList.empty()) {
+int PmergeMe::BinarySearchList(int value) {
+    if (sortedList.empty()) {
         return (0);
     }
 
-    std::list<int>::iterator left = mSortedList.begin();
-    std::list<int>::iterator right = mSortedList.end();
+    std::list<int>::iterator left = sortedList.begin();
+    std::list<int>::iterator right = sortedList.end();
     right--; 
     std::list<int>::iterator mid;
     
     int remainingElements = std::distance(left, right) + 1;
 
-    while (remainingElements > 0 && left != mSortedList.end() && std::distance(left, right) >= 0)
+    while (remainingElements > 0 && left != sortedList.end() && std::distance(left, right) >= 0)
     {
         int moveDistance = remainingElements / 2;
         mid = left;
@@ -556,7 +515,7 @@ int PmergeMe::BinarySearchList(int value)
 
         if (*mid == value)
         {
-            return std::distance(mSortedList.begin(), mid);
+            return std::distance(sortedList.begin(), mid);
         }
         else if (*mid < value)
         {
@@ -565,7 +524,7 @@ int PmergeMe::BinarySearchList(int value)
         }
         else
         {
-            if (mid == mSortedList.begin()) {
+            if (mid == sortedList.begin()) {
 				break;
 			}
             right = mid;
@@ -573,15 +532,13 @@ int PmergeMe::BinarySearchList(int value)
             remainingElements = moveDistance;
         }
     }
-    return std::distance(mSortedList.begin(), left);
+    return std::distance(sortedList.begin(), left);
 }
 
-void PmergeMe::PrintInPutSequence()
-{
-    std::cout << "InputSequence : [";
-    for (std::vector<int>::iterator it = mInputSequence.begin(); it != mInputSequence.end(); ++it)
-    {
-        if (it != mInputSequence.begin())
+void PmergeMe::printInput() {
+    std::cout << "input : [";
+    for (std::vector<int>::iterator it = input.begin(); it != input.end(); ++it) {
+        if (it != input.begin())
         {
             std::cout << ", ";
         }
@@ -591,80 +548,64 @@ void PmergeMe::PrintInPutSequence()
 	std::cout << std::endl;
 }
 
-
-void PmergeMe::PrintProcessingTime(std::string containerType, double time)
-{
+void PmergeMe::printTime(std::string containerType, double time) {
 	std::cout << "Time to process a range of ";
-	std::cout << mInputSequence.size();
+	std::cout << input.size();
 	std::cout << " elements with std::" << containerType << " ";
-	std::cout << RED;
 	std::cout << time;
 	std::cout << RESET;
 	std::cout << " us" << std::endl;
 }
 
-void PmergeMe::PrintPairVector()
-{
-	std::cout << "====================" << std::endl;
-	std::cout << "       Pairs        " << std::endl;
-	std::cout << "====================" << std::endl;
-	for (size_t index = 0; index < mElementPairsVector.size(); index++)
-	{
-		std::cout << "(" << mElementPairsVector[index].first;
-		std::cout << ", " << mElementPairsVector[index].second << ")";
+void PmergeMe::printPairsVector() {
+	std::cout << " *** Pairs Vector *** " << std::endl;
+	for (size_t i = 0; i < elemPairsVector.size(); i++) {
+		std::cout << "(" << elemPairsVector[i].first;
+		std::cout << ", " << elemPairsVector[i].second << ")";
 		std::cout << std::endl;
 	}
 
-	if (mInputSequence.size() % 2 != 0)
-	{
-		std::cout << "(" << mOddElement <<  ")" <<std::endl;
+	if (input.size() % 2 != 0) {
+		std::cout << "(" << oddElement <<  ")" <<std::endl;
 		std::cout << std::endl;
 	}
 	std::cout << std::endl;
 }
 
-void PmergeMe::PrintPairList()
-{
-    std::cout << "====================" << std::endl;
-    std::cout << "       Pairs        " << std::endl;
-    std::cout << "====================" << std::endl;
+void PmergeMe::printPairsList() {
+    std::cout << " *** Pairs List *** " << std::endl;
 
 	std::list<std::pair<int, int> >::iterator it;
-	for (it = mElementPairsList.begin(); it != mElementPairsList.end(); it++)
-	{
+	for (it = elemPairsList.begin(); it != elemPairsList.end(); it++) {
         std::cout << "(" << it->first;
         std::cout << ", " << it->second << ")";
         std::cout << std::endl;
 	}
 
-    if (mInputSequence.size() % 2 != 0)
-    {
-        std::cout << "(" << mOddElement <<  ")" <<std::endl;
+    if (input.size() % 2 != 0) {
+        std::cout << "(" << oddElement <<  ")" <<std::endl;
         std::cout << std::endl;
 	}
 	std::cout << std::endl;
 }
 
-void PmergeMe::PrintAfterSplitVector()
-{
-	PrintSortedSequenceVector();
-	PrintPendingElementsVector();
-	PrintOddElement();
+void PmergeMe::printAfterSplitVector() {
+	printMainVector();
+	printPendingVector();
+	printOddElement();
 }
 
-void PmergeMe::PrintAfterSplitList()
-{
-	PrintSortedSequenceList();
+void PmergeMe::printAfterSplitList() {
+	printMainList();
 	PrintPendingElementsList();
-	PrintOddElement();
+	printOddElement();
 }
 
-void PmergeMe::PrintSortedSequenceVector()
-{
+void PmergeMe::printMainVector() {
     std::cout << "SortedSequence (Vector): [";
-    for (std::vector<int>::iterator it = mSortedSVector.begin(); it != mSortedSVector.end(); ++it)
+    for (std::vector<int>::iterator it = mainVector.begin(); it != mainVector.end(); ++it)
     {
-        if (it != mSortedSVector.begin())
+        if (it != mainVector.begin())
         {
             std::cout << ", ";
         }
@@ -675,12 +616,11 @@ void PmergeMe::PrintSortedSequenceVector()
 
 }
 
-void PmergeMe::PrintPendingElementsVector()
-{
+void PmergeMe::printPendingVector() {
     std::cout << "PendingElements (Vector): [";
-    for (std::vector<int>::iterator it = mPendingElementVector.begin(); it != mPendingElementVector.end(); ++it)
+    for (std::vector<int>::iterator it = pendingVector.begin(); it != pendingVector.end(); ++it)
     {
-        if (it != mPendingElementVector.begin())
+        if (it != pendingVector.begin())
         {
             std::cout << ", ";
         }
@@ -690,45 +630,39 @@ void PmergeMe::PrintPendingElementsVector()
 	std::cout << std::endl;
 }
 
-void PmergeMe::PrintOddElement()
-{
-	if (mInputSequence.size() % 2 != 0)
+void PmergeMe::printOddElement() {
+	if (input.size() % 2 != 0)
 	{
 		std::cout << "OddElement: ";
-		std::cout << mOddElement << std::endl;
+		std::cout << oddElement << std::endl;
 		std::cout << std::endl;
 	}
 }
 
-
-void PmergeMe::PrintJacobsthalIndex()
-{
-    std::cout << "jacobsthalIndex: [";
-    for (size_t index = 0; index < mJacobsthalIndexVector.size(); ++index)
+void PmergeMe::printJacobsthalIndex() {
+    std::cout << "Jacobsthal Index: [";
+    for (size_t index = 0; index < jacobsthalIndexVector.size(); ++index)
     {
         if (index != 0)
         {
             std::cout << ", ";
         }
-        std::cout << mJacobsthalIndexVector[index];
+        std::cout << jacobsthalIndexVector[index];
     }
     std::cout << "]" << std::endl;
 	std::cout << std::endl;
 }
 
-
-void PmergeMe::PrintInsertionDetails(int jacobsthalIndex, int value, int position)
-{
+void PmergeMe::PrintInsertionDetails(int jacobsthalIndex, int value, int position) {
 	std::cout << BLUE << "Insert..." << RESET << std::endl;
     std::cout << CYAN << "Processing Jacobsthal Index: " << jacobsthalIndex << RESET << std::endl; 
     std::cout << MAGENTA << "Value to insert: " << value << RESET << std::endl; 
 	std::cout << CYAN << "Position to insert in SortedSequence: " << position << RESET << std::endl;
 }
 
-void PmergeMe::PrintSortedSequenceList()
-{
+void PmergeMe::printMainList() {
     std::cout << "SortedSequence (List): NULL <-> ";
-    for (std::list<int>::iterator it = mSortedList.begin(); it != mSortedList.end(); ++it)
+    for (std::list<int>::iterator it = sortedList.begin(); it != sortedList.end(); ++it)
     {
         std::cout << "[" << *it << "] <-> ";
     }
@@ -736,14 +670,12 @@ void PmergeMe::PrintSortedSequenceList()
     std::cout << std::endl;
 }
 
-void PmergeMe::PrintPendingElementsList()
-{
+void PmergeMe::PrintPendingElementsList() {
     std::cout << "PendingElements (List): NULL <-> ";
-    for (std::list<int>::iterator it = mPendingElementList.begin(); it != mPendingElementList.end(); ++it)
+    for (std::list<int>::iterator it = pendingElementList.begin(); it != pendingElementList.end(); ++it)
     {
         std::cout << "[" << *it << "] <-> ";
     }
     std::cout << "NULL" << std::endl;
     std::cout << std::endl;
 }
-

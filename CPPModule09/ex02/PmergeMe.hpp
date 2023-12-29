@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 19:35:03 by dkham             #+#    #+#             */
-/*   Updated: 2023/12/27 19:35:04 by dkham            ###   ########.fr       */
+/*   Updated: 2023/12/29 16:40:04 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,11 +21,9 @@
 #include <exception>
 #include <sstream>
 #include <set>
-
 #include <ctime>
 
-#define RED "\033[31m"
-#define GREEN "\033[32m"
+// Color codes for console output formatting
 #define BLUE "\033[34m"
 #define CYAN "\033[36m"
 #define MAGENTA "\033[35m"
@@ -33,70 +31,112 @@
 
 class PmergeMe
 {
-	public:
-		PmergeMe();
-		PmergeMe(const PmergeMe& other);
-		PmergeMe& operator=(const PmergeMe& other);
-		~PmergeMe();
+    public:
+        // Default constructor
+        PmergeMe();
+        // Copy constructor
+        PmergeMe(const PmergeMe& other);
+        // Copy assignment operator
+        PmergeMe& operator=(const PmergeMe& other);
+        // Destructor
+        ~PmergeMe();
 
-		void IsValidInput(int argc, char** argv);
-		bool IsPositiveInteger(const std::string& inputString);
-		void SortUsingContainer();
+        // Validates the input from command line arguments
+        void checkValidInput(int argc, char** argv);
+        // Checks if a string represents a positive integer
+        bool isPositiveInteger(const std::string& inputString);
+        // Initiates the sorting process using the chosen container
+        void runSort();
 
-		void MakePairs();
-		void GenerateJacobsthalIndexes(int pendingElementSize);
-		int Jacobsthal(int n);
+        // Creates pairs for merge-insertion sort algorithm
+        void createPairs();
+        // Generates Jacobsthal sequence indexes for the sorting algorithm
+        void createJacobsthalIndexes(int pendingElementSize);
+        // Computes the nth Jacobsthal number
+        int jacobsthal(int n);
+		
+		// sort using vector
+        double runSortForVector();
+        // Implements merge-insertion sort using vector
+        void fordJohnsonVector();
+        // Helper function for merge sort in vector
+        void mergeSortVector(int left, int right);
+        // Merges two sorted halves in vector
+        void mergeSortedHalves(int left, int mid, int right);
+        // Splits pairs after sorting in vector
+        void splitPairsToMainPendingVector();
+        // Performs insertion sort on vector
+        void insertionSortVector();
+        // Inserts elements at Jacobsthal index positions in vector
+        void insertElemWithJacobsthalIndexesVector(); 
+        // Inserts the odd element in sorted vector
+        void insertOddElemVector();
+        // Binary search helper for vector sorting
+        int binarySearchVector(int value);
 
-		double MeasureTimeForVector();
-		void MergeInsertionSortVector();
-		void MergeSortVector(int left, int right);
-		void MergingVector(int left, int mid, int right);
-		void SplitElementPairsVector();
-		void InsertSortVector();
-		void InsertElementsUsingJacobsthalIndexesVector(); 
-		void InsertOddElementVector();
-		int BinarySearchVector(int value);
+		// sort using list
+        double runSortForList();
+        // Implements merge-insertion sort using list
+        void fordJohnsonList();
+        // Helper function for merge sort in list
+        void mergeSortList(std::list<std::pair<int, int> >::iterator left, std::list<std::pair<int, int> >::iterator right);
+        // Merges two sorted halves in list
+        void MergingList(std::list<std::pair<int, int> >::iterator left, std::list<std::pair<int, int> >::iterator mid, std::list<std::pair<int, int> >::iterator right);
+        // Splits pairs after sorting in list
+        void splitPairsToMainPendingList();
+        // Performs insertion sort on list
+        void insertionSortList();
+        // Inserts elements at Jacobsthal index positions in list
+        void InsertElementsUsingJacobsthalIndexesList();
+        // Inserts the odd element in sorted list
+        void InsertOddElementList();
+        // Binary search helper for list sorting
+        int BinarySearchList(int value);
 
-		double MeasureTimeForList();
-		void MergeInsertionSortList();
-		void MergeSortList(std::list<std::pair<int, int> >::iterator left, std::list<std::pair<int, int> >::iterator right);
-		void MergingList(std::list<std::pair<int, int> >::iterator left, std::list<std::pair<int, int> >::iterator mid, std::list<std::pair<int, int> >::iterator right);
-		void SplitElementPairsList();
-		void InsertSortList();
-		void InsertElementsUsingJacobsthalIndexesList();
-		void InsertOddElementList();
-		int BinarySearchList(int value);
+        // Prints the input sequence
+        void printInput();
+        // Prints the odd element in the sequence
+        void printOddElement();
+        // Prints Jacobsthal index sequence
+        void printJacobsthalIndex();
+        // Prints details of an insertion operation
+        void PrintInsertionDetails(int jacobsthalIndex, int value, int position);
+        // Prints processing time for a given container type
+        void printTime(std::string containerType, double time);
 
+        // Debugging functions for vector container
+        void printPairsVector();
+        void printAfterSplitVector();
+        void printMainVector();
+        void printPendingVector();
 
-		void PrintInPutSequence();
-		void PrintOddElement();
-		void PrintJacobsthalIndex();
-		void PrintInsertionDetails(int jacobsthalIndex, int value, int position);
-		void PrintProcessingTime(std::string containerType, double time);
+        // Debugging functions for list container
+        void printPairsList();
+        void printAfterSplitList();
+        void printMainList();
+        void PrintPendingElementsList();
 
-		void PrintPairVector();
-		void PrintAfterSplitVector();
-		void PrintSortedSequenceVector();
-		void PrintPendingElementsVector();
+    private:
+        // Stores the input sequence of integers
+        std::vector<int> input;
+        // Stores Jacobsthal indexes for the vector container
+        std::vector<int> jacobsthalIndexVector;
+        // Stores the odd element in the sequence
+        int oddElement;
 
-		void PrintPairList();
-		void PrintAfterSplitList();
-		void PrintSortedSequenceList();
-		void PrintPendingElementsList();
+        // Stores element pairs for vector-based sorting
+        std::vector<std::pair<int, int> > elemPairsVector;
+        // Stores the sorted sequence for vector
+        std::vector<int> mainVector;
+        // Stores pending elements for vector sorting
+        std::vector<int> pendingVector;
 
-
-	private:
-		std::vector<int> mInputSequence;
-		std::vector<int> mJacobsthalIndexVector;
-        int mOddElement;
-
-        std::vector<std::pair<int, int> > mElementPairsVector;
-		std::vector<int> mSortedSVector;
-        std::vector<int> mPendingElementVector;
-
-		std::list<std::pair<int, int> > mElementPairsList;
-		std::list<int> mSortedList;
-		std::list<int> mPendingElementList;
+        // Stores element pairs for list-based sorting
+        std::list<std::pair<int, int> > elemPairsList;
+        // Stores the sorted sequence for list
+        std::list<int> sortedList;
+        // Stores pending elements for list sorting
+        std::list<int> pendingElementList;
 };
 
 #endif
