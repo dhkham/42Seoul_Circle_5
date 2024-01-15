@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 20:32:09 by dkham             #+#    #+#             */
-/*   Updated: 2023/12/29 16:45:25 by dkham            ###   ########.fr       */
+/*   Updated: 2024/01/15 19:50:07 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,14 +62,16 @@ void PmergeMe::checkValidInput(int argc, char** argv) {
 	}
 
 	// check if all arguments are positive integers
-	for (int index = 1; index < argc; index++) {
-		if (isPositiveInteger(argv[index]) == true) { // if positive integer, add to input sequence
-			input.push_back(std::atoi(argv[index]));
+	for (int i = 1; i < argc; i++) {
+		if (isPositiveInteger(argv[i]) == true) { // if positive integer, add to input sequence
+			input.push_back(std::atoi(argv[i]));
 		}
 	}
 }
 
-// *** iss.fail() 필요한지 확인 ***
+// *** 
+// iss.fail() 필요한지 확인
+// ***
 bool PmergeMe::isPositiveInteger(const std::string& inputString) {
 	std::istringstream iss(inputString);
 
@@ -80,10 +82,10 @@ bool PmergeMe::isPositiveInteger(const std::string& inputString) {
 	if (iss.eof() == false) {
 		throw std::invalid_argument("Error: \"" + inputString + "\" contains non-numeric characters.");
 	}
-	// check if the value is a positive integer
-	if (iss.fail() == true) {
-		throw std::invalid_argument("Error: \"" + inputString + "\" is not a valid integer.");
-	}
+	// check if the value is an integer
+	// if (iss.fail() == true) {
+	// 	throw std::invalid_argument("Error: \"" + inputString + "\" is not a valid integer.");
+	// }
 	// check if the value is positive
 	if (value < 0) {
 		throw std::invalid_argument("Error: \"" + inputString + "\" is not a positive integer.");
@@ -91,6 +93,9 @@ bool PmergeMe::isPositiveInteger(const std::string& inputString) {
 	return (true);
 }
 
+/*
+    run sort for vector and list
+*/
 void PmergeMe::runSort() {
 	double vectorTime = runSortForVector();
 	double listTime = runSortForList();
@@ -106,6 +111,42 @@ double PmergeMe::runSortForVector() {
 	
 	double elapsedTime = (double)(end - start) / CLOCKS_PER_SEC * 1000000; // convert clock ticks to microseconds
 	return (elapsedTime);
+}
+
+double PmergeMe::runSortForList() {
+	clock_t start = clock();
+	fordJohnsonList();
+	clock_t end = clock();
+	
+	double elapsedTime = (double)(end - start) / CLOCKS_PER_SEC * 1000000;
+
+	return (elapsedTime);
+}
+
+/*
+    fordJohnson for vector
+*/
+void PmergeMe::fordJohnsonVector() {
+	//std::cout << MAGENTA << "After: " << RESET;
+	//printInput();
+
+	std::cout << "createPairs..." << std::endl;
+	createPairs();
+	printPairsVector();
+
+	std::cout << "mergeSortVector..." << std::endl;
+	mergeSortVector(0, elemPairsVector.size() - 1);
+	printPairsVector();
+
+	std::cout << "splitPairsToMainPendingVector..." << std::endl;
+    splitPairsToMainPendingVector();
+	printAfterSplitVector();
+	
+	std::cout << "insertionSortVector..." << std::endl;
+	insertionSortVector();
+
+	std::cout << "RESULT: " << std::endl;
+	printMainVector();
 }
 
 void PmergeMe::createPairs() {
@@ -210,28 +251,7 @@ int PmergeMe::jacobsthal(int n) {
     return currentTerm;
 }
 
-void PmergeMe::fordJohnsonVector() {
-	std::cout << MAGENTA << "After: " << RESET;
-	printInput();
 
-	std::cout << BLUE << "createPairs..." << RESET << std::endl;
-	createPairs();
-	printPairsVector();
-
-	std::cout << BLUE << "mergeSortVector..." << RESET << std::endl;
-	mergeSortVector(0, elemPairsVector.size() - 1);
-	printPairsVector();
-
-	std::cout << BLUE << "splitPairsToMainPendingVector..." << RESET << std::endl;
-    splitPairsToMainPendingVector();
-	printAfterSplitVector();
-	
-	std::cout << BLUE << "insertionSortVector..." << RESET << std::endl;
-	insertionSortVector();
-
-	std::cout << MAGENTA << "RESULT: " << RESET;
-	printMainVector();
-}
 
 void PmergeMe::splitPairsToMainPendingVector() {
 	mainVector.clear();
@@ -303,7 +323,7 @@ void PmergeMe::mergeSortedHalves(int left, int mid, int right) {
 }
 
 void PmergeMe::insertionSortVector() {
-	std::cout << BLUE << "createJacobsthalIndexes ..." << RESET << std::endl;
+	std::cout << "createJacobsthalIndexes ..." << std::endl;
 	// create jacobsthal indexes
 	createJacobsthalIndexes(pendingVector.size());
 	printJacobsthalIndex();
@@ -321,12 +341,12 @@ void PmergeMe::insertElemWithJacobsthalIndexesVector() {
 			int position = binarySearchVector(value);
 
 			PrintInsertionDetails(jacobsthalIndex, value, position);
-			std::cout << "Before: " << RESET;
+			std::cout << "Before: " << std::endl;
 			printMainVector();
 
 			mainVector.insert(mainVector.begin() + position, value);
 
-			std::cout << "After: " << RESET;
+			std::cout << "After: " << std::endl;
 			printMainVector();
 		}
 		pendingVector.clear();
@@ -360,35 +380,25 @@ void PmergeMe::insertOddElemVector() {
     }
 }
 
-double PmergeMe::runSortForList() {
-	clock_t start = clock();
-	fordJohnsonList();
-	clock_t end = clock();
-	
-	double elapsedTime = (double)(end - start) / CLOCKS_PER_SEC * 1000000;
-
-	return (elapsedTime);
-}
-
 void PmergeMe::fordJohnsonList() {
-	std::cout << "After: " << RESET;
-	printInput();
+	// std::cout << "After: " << RESET;
+	// printInput();
 
-	std::cout << BLUE << "createPairs..." << RESET << std::endl;
+	std::cout << "createPairs..." << std::endl;
 	createPairs();
 	printPairsList();
 
-	std::cout << BLUE << "mergeSortList..." << RESET << std::endl;
+	std::cout << "mergeSortList..." << std::endl;
 	mergeSortList(elemPairsList.begin(), elemPairsList.end());
 	printPairsList();
 
-	std::cout << BLUE << "splitPairsToMainPendingList..." << RESET << std::endl;
+	std::cout << "splitPairsToMainPendingList..." << std::endl;
     splitPairsToMainPendingList();
 	printAfterSplitList();
 
 	insertionSortList();
 
-	std::cout << "RESULT: " << RESET;
+	std::cout << "RESULT: " << std::endl;
 	printMainList();
 }
 
@@ -447,7 +457,7 @@ void PmergeMe::MergingList(std::list<std::pair<int, int> >::iterator left, std::
 }
 
 void PmergeMe::insertionSortList() {
-	std::cout << BLUE << "createJacobsthalIndexes ..." << RESET << std::endl;
+	std::cout << "createJacobsthalIndexes ..." << std::endl;
 	createJacobsthalIndexes(pendingElementList.size());
 		printJacobsthalIndex();
 
@@ -468,14 +478,14 @@ void PmergeMe::InsertElementsUsingJacobsthalIndexesList() {
 
         PrintInsertionDetails(jacobsthalIndex, value, position);
 		
-		std::cout << "Before: " << RESET;
+		std::cout << "Before: " << std::endl;
 		printMainList();
 
         std::list<int>::iterator it = sortedList.begin();
         std::advance(it, position);
         sortedList.insert(it, value);
 
-		std::cout << "After: " << RESET;
+		std::cout << "After: " << std::endl;
 		printMainList();
     }
 
@@ -553,7 +563,6 @@ void PmergeMe::printTime(std::string containerType, double time) {
 	std::cout << input.size();
 	std::cout << " elements with std::" << containerType << " ";
 	std::cout << time;
-	std::cout << RESET;
 	std::cout << " us" << std::endl;
 }
 
@@ -654,10 +663,10 @@ void PmergeMe::printJacobsthalIndex() {
 }
 
 void PmergeMe::PrintInsertionDetails(int jacobsthalIndex, int value, int position) {
-	std::cout << BLUE << "Insert..." << RESET << std::endl;
-    std::cout << CYAN << "Processing Jacobsthal Index: " << jacobsthalIndex << RESET << std::endl; 
-    std::cout << MAGENTA << "Value to insert: " << value << RESET << std::endl; 
-	std::cout << CYAN << "Position to insert in SortedSequence: " << position << RESET << std::endl;
+	std::cout << "Insert..." << std::endl;
+    std::cout << "Processing Jacobsthal Index: " << jacobsthalIndex << std::endl; 
+    std::cout << "Value to insert: " << value << std::endl; 
+	std::cout << "Position to insert in SortedSequence: " << position << std::endl;
 }
 
 void PmergeMe::printMainList() {

@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 19:35:03 by dkham             #+#    #+#             */
-/*   Updated: 2023/12/29 16:40:04 by dkham            ###   ########.fr       */
+/*   Updated: 2024/01/15 19:49:13 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,12 +22,6 @@
 #include <sstream>
 #include <set>
 #include <ctime>
-
-// Color codes for console output formatting
-#define BLUE "\033[34m"
-#define CYAN "\033[36m"
-#define MAGENTA "\033[35m"
-#define RESET "\033[0m" 
 
 class PmergeMe
 {
