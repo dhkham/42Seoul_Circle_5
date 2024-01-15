@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 20:32:09 by dkham             #+#    #+#             */
-/*   Updated: 2024/01/15 19:50:07 by dkham            ###   ########.fr       */
+/*   Updated: 2024/01/15 20:14:12 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -127,32 +127,31 @@ double PmergeMe::runSortForList() {
     fordJohnson for vector
 */
 void PmergeMe::fordJohnsonVector() {
-	//std::cout << MAGENTA << "After: " << RESET;
-	//printInput();
 
-	std::cout << "createPairs..." << std::endl;
-	createPairs();
-	printPairsVector();
+	std::cout << "*** createPairsInAscending ****" << std::endl;
+	createPairsInAscending();
+	printVectorPairs();
 
-	std::cout << "mergeSortVector..." << std::endl;
+	std::cout << "*** mergeSortVector ***" << std::endl;
 	mergeSortVector(0, elemPairsVector.size() - 1);
-	printPairsVector();
+	printVectorPairs();
 
-	std::cout << "splitPairsToMainPendingVector..." << std::endl;
+	std::cout << "*** splitPairsToMainPendingVector ***" << std::endl;
     splitPairsToMainPendingVector();
 	printAfterSplitVector();
 	
-	std::cout << "insertionSortVector..." << std::endl;
+	std::cout << "*** insertionSortVector ***" << std::endl;
 	insertionSortVector();
 
 	std::cout << "RESULT: " << std::endl;
 	printMainVector();
 }
 
-void PmergeMe::createPairs() {
+// create pairs in ascending order
+void PmergeMe::createPairsInAscending() {
     // Clear any existing content in the element pairs vectors and lists
-    elemPairsVector.clear();
-    elemPairsList.clear();
+    elemPairsVector.clear();    // vector that stores pairs of elements
+    elemPairsList.clear();      // list that stores pairs of elements
 
     // Iterate over the input in steps of 2 (skip the last element if the size is odd)
     for (size_t i = 0; i < input.size() - 1; i += 2) {
@@ -175,6 +174,81 @@ void PmergeMe::createPairs() {
     // Check if the size of the input is odd
     if (input.size() % 2 != 0) {
         oddElement = input[input.size() - 1]; // If so, store the last element as the odd element
+    }
+}
+
+// print vector pairs
+void PmergeMe::printVectorPairs() {
+	for (size_t i = 0; i < elemPairsVector.size(); i++) {
+		std::cout << "(" << elemPairsVector[i].first;
+		std::cout << ", " << elemPairsVector[i].second << ")";
+		std::cout << std::endl;
+	}
+
+	if (input.size() % 2 != 0) {
+		std::cout << "(" << oddElement <<  ")" <<std::endl;
+		std::cout << std::endl;
+	}
+	std::cout << std::endl;
+}
+
+// run merge sort based on first element of vector
+void PmergeMe::mergeSortVector(int left, int right) {
+    // Base case: if the range is zero or negative, no sorting is needed
+    if (left >= right)
+        return;
+    
+    // Calculate the middle index of the current range (divide and conquer)
+	int mid = left + (right - left) / 2; // avoid overflow
+	
+    // Recursively apply merge sort to the left half of the range
+    mergeSortVector(left, mid);
+
+    // Recursively apply merge sort to the right half of the range
+    mergeSortVector(mid + 1, right);
+
+    // Merge the two halves together
+    mergeSortedHalves(left, mid, right);
+}
+
+void PmergeMe::mergeSortedHalves(int left, int mid, int right) {
+    // Calculate sizes of two sub-vectors to be merged
+    int leftSize = mid - left + 1;
+    int Rightsize = right - mid;
+
+    // Create temporary vectors for left and right halves
+    std::vector<std::pair<int, int> > leftPair(leftSize);
+    std::vector<std::pair<int, int> > rightPair(Rightsize);
+
+    // Copy data to temporary vectors
+    for (int i = 0; i < leftSize; i++) {
+        leftPair[i] = elemPairsVector[left + i];
+    }
+    for (int i = 0; i < Rightsize; i++) {
+        rightPair[i] = elemPairsVector[mid + 1 + i];
+    }
+
+    // Indices for traversing the temporary vectors and the merge index for the original vector
+    int indexLeft = 0, indexRight = 0, mergeIndex = left;
+
+    // Merge the temporary vectors back into elemPairsVector
+    while (indexLeft < leftSize && indexRight < Rightsize) {
+        if (leftPair[indexLeft].first <= rightPair[indexRight].first) { // compare the first elements of the pairs
+            elemPairsVector[mergeIndex] = leftPair[indexLeft++]; // if the left element is smaller, copy it to elemPairsVector
+        } else { 
+            elemPairsVector[mergeIndex] = rightPair[indexRight++]; // otherwise, copy the right element to elemPairsVector
+        }
+        mergeIndex++;
+    }
+
+    // Copy the remaining elements of leftPair, if any
+    while (indexLeft < leftSize) {	// if there are any elements left in the leftPair vector, copy them to elemPairsVector
+        elemPairsVector[mergeIndex++] = leftPair[indexLeft++];
+    }
+
+    // Copy the remaining elements of rightPair, if any
+    while (indexRight < Rightsize) { // if there are any elements left in the rightPair vector, copy them to elemPairsVector
+        elemPairsVector[mergeIndex++] = rightPair[indexRight++];
     }
 }
 
@@ -251,8 +325,6 @@ int PmergeMe::jacobsthal(int n) {
     return currentTerm;
 }
 
-
-
 void PmergeMe::splitPairsToMainPendingVector() {
 	mainVector.clear();
 	pendingVector.clear();
@@ -260,65 +332,6 @@ void PmergeMe::splitPairsToMainPendingVector() {
     for (size_t i = 0; i < elemPairsVector.size(); i++) {
         mainVector.push_back(elemPairsVector[i].first);
         pendingVector.push_back(elemPairsVector[i].second);
-    }
-}
-
-void PmergeMe::mergeSortVector(int left, int right) {
-    // Base case: if the range is zero or negative, no sorting is needed
-    if (left >= right)
-        return;
-    
-    // Calculate the middle index of the current range (divide and conquer)
-	int mid = left + (right - left) / 2; // avoid overflow
-	
-    // Recursively apply merge sort to the left half of the range
-    mergeSortVector(left, mid);
-
-    // Recursively apply merge sort to the right half of the range
-    mergeSortVector(mid + 1, right);
-
-    // Merge the two halves together
-    mergeSortedHalves(left, mid, right);
-}
-
-void PmergeMe::mergeSortedHalves(int left, int mid, int right) {
-    // Calculate sizes of two sub-vectors to be merged
-    int leftSize = mid - left + 1;
-    int Rightsize = right - mid;
-
-    // Create temporary vectors for left and right halves
-    std::vector<std::pair<int, int> > leftPair(leftSize);
-    std::vector<std::pair<int, int> > rightPair(Rightsize);
-
-    // Copy data to temporary vectors
-    for (int i = 0; i < leftSize; i++) {
-        leftPair[i] = elemPairsVector[left + i];
-    }
-    for (int i = 0; i < Rightsize; i++) {
-        rightPair[i] = elemPairsVector[mid + 1 + i];
-    }
-
-    // Indices for traversing the temporary vectors and the merge index for the original vector
-    int indexLeft = 0, indexRight = 0, mergeIndex = left;
-
-    // Merge the temporary vectors back into elemPairsVector
-    while (indexLeft < leftSize && indexRight < Rightsize) {
-        if (leftPair[indexLeft].first <= rightPair[indexRight].first) { // compare the first elements of the pairs
-            elemPairsVector[mergeIndex] = leftPair[indexLeft++]; // if the left element is smaller, copy it to elemPairsVector
-        } else { 
-            elemPairsVector[mergeIndex] = rightPair[indexRight++]; // otherwise, copy the right element to elemPairsVector
-        }
-        mergeIndex++;
-    }
-
-    // Copy the remaining elements of leftPair, if any
-    while (indexLeft < leftSize) {	// if there are any elements left in the leftPair vector, copy them to elemPairsVector
-        elemPairsVector[mergeIndex++] = leftPair[indexLeft++];
-    }
-
-    // Copy the remaining elements of rightPair, if any
-    while (indexRight < Rightsize) { // if there are any elements left in the rightPair vector, copy them to elemPairsVector
-        elemPairsVector[mergeIndex++] = rightPair[indexRight++];
     }
 }
 
@@ -384,8 +397,8 @@ void PmergeMe::fordJohnsonList() {
 	// std::cout << "After: " << RESET;
 	// printInput();
 
-	std::cout << "createPairs..." << std::endl;
-	createPairs();
+	std::cout << "createPairsInAscending..." << std::endl;
+	createPairsInAscending();
 	printPairsList();
 
 	std::cout << "mergeSortList..." << std::endl;
@@ -545,18 +558,18 @@ int PmergeMe::BinarySearchList(int value) {
     return std::distance(sortedList.begin(), left);
 }
 
-void PmergeMe::printInput() {
-    std::cout << "input : [";
-    for (std::vector<int>::iterator it = input.begin(); it != input.end(); ++it) {
-        if (it != input.begin())
-        {
-            std::cout << ", ";
-        }
-        std::cout << *it;
-    }
-    std::cout << "]" << std::endl;
-	std::cout << std::endl;
-}
+// void PmergeMe::printInput() {
+//     std::cout << "input : [";
+//     for (std::vector<int>::iterator it = input.begin(); it != input.end(); ++it) {
+//         if (it != input.begin())
+//         {
+//             std::cout << ", ";
+//         }
+//         std::cout << *it;
+//     }
+//     std::cout << "]" << std::endl;
+// 	std::cout << std::endl;
+// }
 
 void PmergeMe::printTime(std::string containerType, double time) {
 	std::cout << "Time to process a range of ";
@@ -566,20 +579,7 @@ void PmergeMe::printTime(std::string containerType, double time) {
 	std::cout << " us" << std::endl;
 }
 
-void PmergeMe::printPairsVector() {
-	std::cout << " *** Pairs Vector *** " << std::endl;
-	for (size_t i = 0; i < elemPairsVector.size(); i++) {
-		std::cout << "(" << elemPairsVector[i].first;
-		std::cout << ", " << elemPairsVector[i].second << ")";
-		std::cout << std::endl;
-	}
 
-	if (input.size() % 2 != 0) {
-		std::cout << "(" << oddElement <<  ")" <<std::endl;
-		std::cout << std::endl;
-	}
-	std::cout << std::endl;
-}
 
 void PmergeMe::printPairsList() {
     std::cout << " *** Pairs List *** " << std::endl;

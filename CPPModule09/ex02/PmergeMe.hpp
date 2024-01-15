@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 19:35:03 by dkham             #+#    #+#             */
-/*   Updated: 2024/01/15 19:49:13 by dkham            ###   ########.fr       */
+/*   Updated: 2024/01/15 20:05:59 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ class PmergeMe
         void runSort();
 
         // Creates pairs for merge-insertion sort algorithm
-        void createPairs();
+        void createPairsInAscending();
         // Generates Jacobsthal sequence indexes for the sorting algorithm
         void createJacobsthalIndexes(int pendingElementSize);
         // Computes the nth Jacobsthal number
@@ -99,7 +99,7 @@ class PmergeMe
         void printTime(std::string containerType, double time);
 
         // Debugging functions for vector container
-        void printPairsVector();
+        void printVectorPairs();
         void printAfterSplitVector();
         void printMainVector();
         void printPendingVector();
