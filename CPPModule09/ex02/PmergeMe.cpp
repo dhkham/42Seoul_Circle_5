@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 20:32:09 by dkham             #+#    #+#             */
-/*   Updated: 2024/01/15 20:14:12 by dkham            ###   ########.fr       */
+/*   Updated: 2024/01/18 20:35:14 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,17 +128,17 @@ double PmergeMe::runSortForList() {
 */
 void PmergeMe::fordJohnsonVector() {
 
-	std::cout << "*** createPairsInAscending ****" << std::endl;
-	createPairsInAscending();
+	std::cout << "*** createPairsInDescending ****" << std::endl;
+	createPairsInDescending(); // create pairs so that each pair is in descending order
 	printVectorPairs();
 
 	std::cout << "*** mergeSortVector ***" << std::endl;
-	mergeSortVector(0, elemPairsVector.size() - 1);
+	mergeSortVector(0, elemPairsVector.size() - 1); // merge sort base on the first element of the pair
 	printVectorPairs();
 
 	std::cout << "*** splitPairsToMainPendingVector ***" << std::endl;
-    splitPairsToMainPendingVector();
-	printAfterSplitVector();
+    splitPairsToMainPendingVector(); // split pairs to main and pending vector
+	printAfterSplitingMainPending();
 	
 	std::cout << "*** insertionSortVector ***" << std::endl;
 	insertionSortVector();
@@ -148,7 +148,7 @@ void PmergeMe::fordJohnsonVector() {
 }
 
 // create pairs in ascending order
-void PmergeMe::createPairsInAscending() {
+void PmergeMe::createPairsInDescending() {
     // Clear any existing content in the element pairs vectors and lists
     elemPairsVector.clear();    // vector that stores pairs of elements
     elemPairsList.clear();      // list that stores pairs of elements
@@ -252,6 +252,30 @@ void PmergeMe::mergeSortedHalves(int left, int mid, int right) {
     }
 }
 
+// split pairs to main and pending vector
+void PmergeMe::splitPairsToMainPendingVector() {
+	mainVector.clear();
+	pendingVector.clear();
+
+    for (size_t i = 0; i < elemPairsVector.size(); i++) {
+        mainVector.push_back(elemPairsVector[i].first);
+        pendingVector.push_back(elemPairsVector[i].second);
+    }
+}
+
+/*
+    insertion sort for vector
+*/
+void PmergeMe::insertionSortVector() {
+	// create jacobsthal indexes
+	createJacobsthalIndexes(pendingVector.size());
+	printJacobsthalIndex();
+	
+	// insert elements using jacobsthal indexes
+	insertElemWithJacobsthalIndexesVector(); // binarySearchVector() is used here to find the position to insert
+    insertOddElemVector();
+}
+
 void PmergeMe::createJacobsthalIndexes(int pendingElementSize) {
     // Clear the existing Jacobsthal index vector
     jacobsthalIndexVector.clear();
@@ -325,27 +349,6 @@ int PmergeMe::jacobsthal(int n) {
     return currentTerm;
 }
 
-void PmergeMe::splitPairsToMainPendingVector() {
-	mainVector.clear();
-	pendingVector.clear();
-
-    for (size_t i = 0; i < elemPairsVector.size(); i++) {
-        mainVector.push_back(elemPairsVector[i].first);
-        pendingVector.push_back(elemPairsVector[i].second);
-    }
-}
-
-void PmergeMe::insertionSortVector() {
-	std::cout << "createJacobsthalIndexes ..." << std::endl;
-	// create jacobsthal indexes
-	createJacobsthalIndexes(pendingVector.size());
-	printJacobsthalIndex();
-	
-	// insert elements using jacobsthal indexes
-	insertElemWithJacobsthalIndexesVector();
-    insertOddElemVector();
-}
-
 void PmergeMe::insertElemWithJacobsthalIndexesVector() {
 	for (size_t index = 0; index < jacobsthalIndexVector.size(); ++index)
 		{
@@ -365,6 +368,8 @@ void PmergeMe::insertElemWithJacobsthalIndexesVector() {
 		pendingVector.clear();
 }
 
+// 여기서 문제는 mainVector 전체에 대해 binarySearch를 수행한다는 것이다.
+// pending vector에 있는 bk를 main vector에 삽입할 때, 그에 상응하는 ak 앞에 원소들에 대해서만 binary search를 수행하면 된다.
 int PmergeMe::binarySearchVector(int value) {
 	int left = 0;
 	int right = mainVector.size() - 1;
@@ -397,8 +402,8 @@ void PmergeMe::fordJohnsonList() {
 	// std::cout << "After: " << RESET;
 	// printInput();
 
-	std::cout << "createPairsInAscending..." << std::endl;
-	createPairsInAscending();
+	std::cout << "createPairsInDescending..." << std::endl;
+	createPairsInDescending();
 	printPairsList();
 
 	std::cout << "mergeSortList..." << std::endl;
@@ -598,7 +603,7 @@ void PmergeMe::printPairsList() {
 	std::cout << std::endl;
 }
 
-void PmergeMe::printAfterSplitVector() {
+void PmergeMe::printAfterSplitingMainPending() {
 	printMainVector();
 	printPendingVector();
 	printOddElement();
