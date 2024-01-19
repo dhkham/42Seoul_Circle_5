@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 20:32:09 by dkham             #+#    #+#             */
-/*   Updated: 2024/01/18 20:35:14 by dkham            ###   ########.fr       */
+/*   Updated: 2024/01/19 19:36:28 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,17 @@ void PmergeMe::checkValidInput(int argc, char** argv) {
 			input.push_back(std::atoi(argv[i]));
 		}
 	}
+    
+    // check for duplicates (error when duplicate elements are found)
+    std::set<int> set;
+    for (size_t i = 0; i < input.size(); i++) {
+        if (set.find(input[i]) == set.end()) {
+            set.insert(input[i]);
+        }
+        else {
+            throw std::invalid_argument("Error: Duplicate elements found in the input sequence.");
+        }
+    }
 }
 
 // *** 
@@ -354,7 +365,7 @@ void PmergeMe::insertElemWithJacobsthalIndexesVector() {
 		{
 			int jacobsthalIndex = jacobsthalIndexVector[index];
 			int value = pendingVector[jacobsthalIndex - 1];
-			int position = binarySearchVector(value);
+			int position = binarySearchVector(value); // get the position to insert thru binary search
 
 			PrintInsertionDetails(jacobsthalIndex, value, position);
 			std::cout << "Before: " << std::endl;
@@ -370,17 +381,42 @@ void PmergeMe::insertElemWithJacobsthalIndexesVector() {
 
 // 여기서 문제는 mainVector 전체에 대해 binarySearch를 수행한다는 것이다.
 // pending vector에 있는 bk를 main vector에 삽입할 때, 그에 상응하는 ak 앞에 원소들에 대해서만 binary search를 수행하면 된다.
-int PmergeMe::binarySearchVector(int value) {
+// 예를 들어 b3를 삽입할 때, b3는 a3보다 작으므로 a3 앞에 있는 원소들에 대해서만 binary search를 수행하면 된다.
+int PmergeMe::binarySearchVector(int value) { // value is the element from the pending vector (bk)
 	int left = 0;
+
 	int right = mainVector.size() - 1;
+    /*
+        여기서 mainVector 범위 전체를 볼 것이 아니라,
+        pending vector에 있는 bk에 상응하는 ak 앞에 있는 원소들에 대해서만 binary search를 수행하는 것으로 바꾸면 된다 (즉 right 변수가 커버하는 범위를 바꿔야)
+        이를 위해서는 bk(여기서는 value)값에 상응하는 ak를 먼저 찾아내야한다. (elemPairsVector를 사용하면 될 듯)
+        그 후 mainVector에서 ak의 위치를 찾아내고, 그 위치를 right로 설정하면 된다.
+    */
+    int correspondingAk;
+    
+    // find element in elemPairsVector, which corresponds to the "value"
+    for (size_t i = 0; i < elemPairsVector.size(); i++) {
+        if (elemPairsVector[i].second == value) { // find bk in pendingVector
+            correspondingAk = elemPairsVector[i].first; // then, find corresponding ak in mainVector
+            break;
+        }
+    }
+    
+    // find the position of ak in mainVector, and set it as right
+    for (size_t i = 0; i < mainVector.size(); i++) {
+        if (mainVector[i] == correspondingAk) {
+            right = i;
+            break;
+        }
+    }
 
 	while (left <= right)
 	{
 		int mid = (left + right) / 2;
-		if (mainVector[mid] == value) {
-			return (mid);
-		}
-		else if (mainVector[mid] < value) {
+		// if (mainVector[mid] == value) { // 중복 방지했으므로 삭제
+		// 	return (mid);
+		// }
+		if (mainVector[mid] < value) {
 			left = mid + 1;
 		}
 		else {
@@ -541,7 +577,7 @@ int PmergeMe::BinarySearchList(int value) {
         mid = left;
         std::advance(mid, moveDistance);
 
-        if (*mid == value)
+        if (*mid == value) // 삭제?
         {
             return std::distance(sortedList.begin(), mid);
         }
