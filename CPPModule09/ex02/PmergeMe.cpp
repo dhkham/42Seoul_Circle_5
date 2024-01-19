@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 20:32:09 by dkham             #+#    #+#             */
-/*   Updated: 2024/01/19 19:36:28 by dkham            ###   ########.fr       */
+/*   Updated: 2024/01/19 20:23:59 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,22 @@ bool PmergeMe::isPositiveInteger(const std::string& inputString) {
 void PmergeMe::runSort() {
 	double vectorTime = runSortForVector();
 	double listTime = runSortForList();
-
+    
+    // print input values e.g., Before: 3 5 9 7 4
+    std::cout << "Before: ";
+    for (size_t i = 0; i < input.size(); i++) {
+        std::cout << input[i] << " ";
+    }
+    std::cout << std::endl;
+    
+    // print sorted values e.g., After: 3 4 5 7 9
+    std::cout << "After:  ";
+    for (size_t i = 0; i < mainVector.size(); i++) {
+        std::cout << mainVector[i] << " ";
+    }
+    std::cout << std::endl;
+    
+    // print time spent for sorting 
 	printTime("vector", vectorTime);
 	printTime("list", listTime);
 }
@@ -138,8 +153,8 @@ double PmergeMe::runSortForList() {
     fordJohnson for vector
 */
 void PmergeMe::fordJohnsonVector() {
-
-	std::cout << "*** createPairsInDescending ****" << std::endl;
+    std::cout << "|     VECTOR     |" << std::endl;
+	std::cout << "*** createPairsInDescending ***" << std::endl;
 	createPairsInDescending(); // create pairs so that each pair is in descending order
 	printVectorPairs();
 
@@ -367,7 +382,7 @@ void PmergeMe::insertElemWithJacobsthalIndexesVector() {
 			int value = pendingVector[jacobsthalIndex - 1];
 			int position = binarySearchVector(value); // get the position to insert thru binary search
 
-			PrintInsertionDetails(jacobsthalIndex, value, position);
+			printInsertionDetails(jacobsthalIndex, value, position);
 			std::cout << "Before: " << std::endl;
 			printMainVector();
 
@@ -427,6 +442,7 @@ int PmergeMe::binarySearchVector(int value) { // value is the element from the p
 }
 
 void PmergeMe::insertOddElemVector() {
+    std::cout << "insert odd element" << std::endl;
     if (input.size() % 2 != 0)
 	{
         int position = binarySearchVector(oddElement);
@@ -435,21 +451,20 @@ void PmergeMe::insertOddElemVector() {
 }
 
 void PmergeMe::fordJohnsonList() {
-	// std::cout << "After: " << RESET;
-	// printInput();
-
-	std::cout << "createPairsInDescending..." << std::endl;
+    std::cout << "|     LIST     |" << std::endl;
+	std::cout << "*** createPairsInDescending ***" << std::endl;
 	createPairsInDescending();
-	printPairsList();
+	printListPairs();
 
-	std::cout << "mergeSortList..." << std::endl;
+	std::cout << "*** mergeSortList ***" << std::endl;
 	mergeSortList(elemPairsList.begin(), elemPairsList.end());
-	printPairsList();
+	printListPairs();
 
-	std::cout << "splitPairsToMainPendingList..." << std::endl;
+	std::cout << "*** splitPairsToMainPendingList ***" << std::endl;
     splitPairsToMainPendingList();
 	printAfterSplitList();
 
+    std::cout << "*** insertionSortList ***" << std::endl;
 	insertionSortList();
 
 	std::cout << "RESULT: " << std::endl;
@@ -511,15 +526,14 @@ void PmergeMe::MergingList(std::list<std::pair<int, int> >::iterator left, std::
 }
 
 void PmergeMe::insertionSortList() {
-	std::cout << "createJacobsthalIndexes ..." << std::endl;
 	createJacobsthalIndexes(pendingElementList.size());
-		printJacobsthalIndex();
+	printJacobsthalIndex();
 
-	InsertElementsUsingJacobsthalIndexesList();
-    InsertOddElementList();
+	InsertElementsWithJacobsthalIndexesList();
+    insertOddElementList();
 }
 
-void PmergeMe::InsertElementsUsingJacobsthalIndexesList() {
+void PmergeMe::InsertElementsWithJacobsthalIndexesList() {
     for (size_t index = 0; index < jacobsthalIndexVector.size(); ++index) 
     {
         int jacobsthalIndex = jacobsthalIndexVector[index];
@@ -528,9 +542,9 @@ void PmergeMe::InsertElementsUsingJacobsthalIndexesList() {
         std::advance(valueIt, jacobsthalIndex - 1);
         int value = *valueIt;
 
-        int position = BinarySearchList(value);
+        int position = binarySearchList(value);
 
-        PrintInsertionDetails(jacobsthalIndex, value, position);
+        printInsertionDetails(jacobsthalIndex, value, position);
 		
 		std::cout << "Before: " << std::endl;
 		printMainList();
@@ -547,10 +561,11 @@ void PmergeMe::InsertElementsUsingJacobsthalIndexesList() {
 }
 
 
-void PmergeMe::InsertOddElementList() {
+void PmergeMe::insertOddElementList() {
+    std::cout << "insert odd element" << std::endl;
     if (input.size() % 2 != 0)
 	{
-        int position = BinarySearchList(oddElement);
+        int position = binarySearchList(oddElement);
 
         std::list<int>::iterator it = sortedList.begin();
         std::advance(it, position);
@@ -559,7 +574,7 @@ void PmergeMe::InsertOddElementList() {
     }
 }
 
-int PmergeMe::BinarySearchList(int value) {
+int PmergeMe::binarySearchList(int value) {
     if (sortedList.empty()) {
         return (0);
     }
@@ -622,9 +637,7 @@ void PmergeMe::printTime(std::string containerType, double time) {
 
 
 
-void PmergeMe::printPairsList() {
-    std::cout << " *** Pairs List *** " << std::endl;
-
+void PmergeMe::printListPairs() {
 	std::list<std::pair<int, int> >::iterator it;
 	for (it = elemPairsList.begin(); it != elemPairsList.end(); it++) {
         std::cout << "(" << it->first;
@@ -652,7 +665,7 @@ void PmergeMe::printAfterSplitList() {
 }
 
 void PmergeMe::printMainVector() {
-    std::cout << "SortedSequence (Vector): [";
+    std::cout << "Main Vector: [";
     for (std::vector<int>::iterator it = mainVector.begin(); it != mainVector.end(); ++it)
     {
         if (it != mainVector.begin())
@@ -667,7 +680,7 @@ void PmergeMe::printMainVector() {
 }
 
 void PmergeMe::printPendingVector() {
-    std::cout << "PendingElements (Vector): [";
+    std::cout << "Pending Vector: [";
     for (std::vector<int>::iterator it = pendingVector.begin(); it != pendingVector.end(); ++it)
     {
         if (it != pendingVector.begin())
@@ -703,15 +716,14 @@ void PmergeMe::printJacobsthalIndex() {
 	std::cout << std::endl;
 }
 
-void PmergeMe::PrintInsertionDetails(int jacobsthalIndex, int value, int position) {
-	std::cout << "Insert..." << std::endl;
-    std::cout << "Processing Jacobsthal Index: " << jacobsthalIndex << std::endl; 
-    std::cout << "Value to insert: " << value << std::endl; 
-	std::cout << "Position to insert in SortedSequence: " << position << std::endl;
+void PmergeMe::printInsertionDetails(int jacobsthalIndex, int value, int position) {
+    std::cout << "Jacobsthal Index: " << jacobsthalIndex << std::endl; 
+    std::cout << "Insert value: " << value << std::endl; 
+	std::cout << "Position to insert in Main: " << position << std::endl;
 }
 
 void PmergeMe::printMainList() {
-    std::cout << "SortedSequence (List): NULL <-> ";
+    std::cout << "Main List: NULL <-> ";
     for (std::list<int>::iterator it = sortedList.begin(); it != sortedList.end(); ++it)
     {
         std::cout << "[" << *it << "] <-> ";
@@ -721,7 +733,7 @@ void PmergeMe::printMainList() {
 }
 
 void PmergeMe::PrintPendingElementsList() {
-    std::cout << "PendingElements (List): NULL <-> ";
+    std::cout << "Pending List: NULL <-> ";
     for (std::list<int>::iterator it = pendingElementList.begin(); it != pendingElementList.end(); ++it)
     {
         std::cout << "[" << *it << "] <-> ";

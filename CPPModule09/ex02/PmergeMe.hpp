@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 19:35:03 by dkham             #+#    #+#             */
-/*   Updated: 2024/01/16 20:52:57 by dkham            ###   ########.fr       */
+/*   Updated: 2024/01/19 20:17:32 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,11 +81,11 @@ class PmergeMe
         // Performs insertion sort on list
         void insertionSortList();
         // Inserts elements at Jacobsthal index positions in list
-        void InsertElementsUsingJacobsthalIndexesList();
+        void InsertElementsWithJacobsthalIndexesList();
         // Inserts the odd element in sorted list
-        void InsertOddElementList();
+        void insertOddElementList();
         // Binary search helper for list sorting
-        int BinarySearchList(int value);
+        int binarySearchList(int value);
 
         // Prints the input sequence
         void printInput();
@@ -94,7 +94,7 @@ class PmergeMe
         // Prints Jacobsthal index sequence
         void printJacobsthalIndex();
         // Prints details of an insertion operation
-        void PrintInsertionDetails(int jacobsthalIndex, int value, int position);
+        void printInsertionDetails(int jacobsthalIndex, int value, int position);
         // Prints processing time for a given container type
         void printTime(std::string containerType, double time);
 
@@ -105,7 +105,7 @@ class PmergeMe
         void printPendingVector();
 
         // Debugging functions for list container
-        void printPairsList();
+        void printListPairs();
         void printAfterSplitList();
         void printMainList();
         void PrintPendingElementsList();
