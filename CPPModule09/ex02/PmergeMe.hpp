@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 19:35:03 by dkham             #+#    #+#             */
-/*   Updated: 2024/01/19 20:17:32 by dkham            ###   ########.fr       */
+/*   Updated: 2024/01/24 20:05:29 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ class PmergeMe
         // Helper function for merge sort in vector
         void mergeSortVector(int left, int right);
         // Merges two sorted halves in vector
-        void mergeSortedHalves(int left, int mid, int right);
+        void mergeSortedHalvesVector(int left, int mid, int right);
         // Splits pairs after sorting in vector
         void splitPairsToMainPendingVector();
         // Performs insertion sort on vector
@@ -75,20 +75,18 @@ class PmergeMe
         // Helper function for merge sort in list
         void mergeSortList(std::list<std::pair<int, int> >::iterator left, std::list<std::pair<int, int> >::iterator right);
         // Merges two sorted halves in list
-        void MergingList(std::list<std::pair<int, int> >::iterator left, std::list<std::pair<int, int> >::iterator mid, std::list<std::pair<int, int> >::iterator right);
+        void mergeSortedHalvesList(std::list<std::pair<int, int> >::iterator left, std::list<std::pair<int, int> >::iterator mid, std::list<std::pair<int, int> >::iterator right);
         // Splits pairs after sorting in list
         void splitPairsToMainPendingList();
         // Performs insertion sort on list
         void insertionSortList();
         // Inserts elements at Jacobsthal index positions in list
-        void InsertElementsWithJacobsthalIndexesList();
+        void insertElementsWithJacobsthalIndexesList();
         // Inserts the odd element in sorted list
         void insertOddElementList();
         // Binary search helper for list sorting
         int binarySearchList(int value);
 
-        // Prints the input sequence
-        void printInput();
         // Prints the odd element in the sequence
         void printOddElement();
         // Prints Jacobsthal index sequence
@@ -100,13 +98,13 @@ class PmergeMe
 
         // Debugging functions for vector container
         void printVectorPairs();
-        void printAfterSplitingMainPending();
+        void printAfterSplitingMainPendingVector();
         void printMainVector();
         void printPendingVector();
 
         // Debugging functions for list container
         void printListPairs();
-        void printAfterSplitList();
+        void printAfterSplitingMainPendingList();
         void printMainList();
         void PrintPendingElementsList();
 

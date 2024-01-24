@@ -6,12 +6,13 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 20:32:09 by dkham             #+#    #+#             */
-/*   Updated: 2024/01/19 20:23:59 by dkham            ###   ########.fr       */
+/*   Updated: 2024/01/24 20:06:00 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PmergeMe.hpp"
 
+// Default constructor
 PmergeMe::PmergeMe(): input()
 	, jacobsthalIndexVector()
 	, oddElement(0)
@@ -23,6 +24,7 @@ PmergeMe::PmergeMe(): input()
 	, pendingElementList()
 {}
 
+// Copy constructor
 PmergeMe::PmergeMe(const PmergeMe& other)
 	: input(other.input)
 	, jacobsthalIndexVector(other.jacobsthalIndexVector)
@@ -35,6 +37,7 @@ PmergeMe::PmergeMe(const PmergeMe& other)
 	, pendingElementList(other.pendingElementList)
 {}
 
+// Copy assignment operator
 PmergeMe& PmergeMe::operator=(const PmergeMe& other) {
 	
 	if (this != &other)
@@ -52,9 +55,13 @@ PmergeMe& PmergeMe::operator=(const PmergeMe& other) {
 	return (*this);
 }
 
+// Destructor
 PmergeMe::~PmergeMe()
 {}
 
+/*
+    check valid input
+*/
 void PmergeMe::checkValidInput(int argc, char** argv) {
 	// check number of arguments
 	if (argc < 2) {
@@ -80,9 +87,6 @@ void PmergeMe::checkValidInput(int argc, char** argv) {
     }
 }
 
-// *** 
-// iss.fail() 필요한지 확인
-// ***
 bool PmergeMe::isPositiveInteger(const std::string& inputString) {
 	std::istringstream iss(inputString);
 
@@ -91,12 +95,8 @@ bool PmergeMe::isPositiveInteger(const std::string& inputString) {
 
 	// check if the entire string was read (no non-numeric characters)
 	if (iss.eof() == false) {
-		throw std::invalid_argument("Error: \"" + inputString + "\" contains non-numeric characters.");
+		throw std::invalid_argument("Error: \"" + inputString + "\" contains non-integer values.");
 	}
-	// check if the value is an integer
-	// if (iss.fail() == true) {
-	// 	throw std::invalid_argument("Error: \"" + inputString + "\" is not a valid integer.");
-	// }
 	// check if the value is positive
 	if (value < 0) {
 		throw std::invalid_argument("Error: \"" + inputString + "\" is not a positive integer.");
@@ -164,7 +164,7 @@ void PmergeMe::fordJohnsonVector() {
 
 	std::cout << "*** splitPairsToMainPendingVector ***" << std::endl;
     splitPairsToMainPendingVector(); // split pairs to main and pending vector
-	printAfterSplitingMainPending();
+	printAfterSplitingMainPendingVector();
 	
 	std::cout << "*** insertionSortVector ***" << std::endl;
 	insertionSortVector();
@@ -173,7 +173,7 @@ void PmergeMe::fordJohnsonVector() {
 	printMainVector();
 }
 
-// create pairs in ascending order
+// create pairs in descending order
 void PmergeMe::createPairsInDescending() {
     // Clear any existing content in the element pairs vectors and lists
     elemPairsVector.clear();    // vector that stores pairs of elements
@@ -182,14 +182,12 @@ void PmergeMe::createPairsInDescending() {
     // Iterate over the input in steps of 2 (skip the last element if the size is odd)
     for (size_t i = 0; i < input.size() - 1; i += 2) {
         std::pair<int, int> pair;
-
-        // Check if the current element is less than the next element
+        
+        // Create a pair of elements in descending order
         if (input[i] < input[i + 1]) {
-            // If so, create a pair with the elements in ascending order
             pair = std::make_pair(input[i + 1], input[i]);
         }
         else {
-            // Otherwise, create a pair with the elements in their original order
             pair = std::make_pair(input[i], input[i + 1]);
         }
         // Add this pair to both the vector and list containers
@@ -234,10 +232,10 @@ void PmergeMe::mergeSortVector(int left, int right) {
     mergeSortVector(mid + 1, right);
 
     // Merge the two halves together
-    mergeSortedHalves(left, mid, right);
+    mergeSortedHalvesVector(left, mid, right);
 }
 
-void PmergeMe::mergeSortedHalves(int left, int mid, int right) {
+void PmergeMe::mergeSortedHalvesVector(int left, int mid, int right) {
     // Calculate sizes of two sub-vectors to be merged
     int leftSize = mid - left + 1;
     int Rightsize = right - mid;
@@ -299,7 +297,7 @@ void PmergeMe::insertionSortVector() {
 	
 	// insert elements using jacobsthal indexes
 	insertElemWithJacobsthalIndexesVector(); // binarySearchVector() is used here to find the position to insert
-    insertOddElemVector();
+    insertOddElemVector(); // insert the odd element in sorted vector
 }
 
 void PmergeMe::createJacobsthalIndexes(int pendingElementSize) {
@@ -394,22 +392,13 @@ void PmergeMe::insertElemWithJacobsthalIndexesVector() {
 		pendingVector.clear();
 }
 
-// 여기서 문제는 mainVector 전체에 대해 binarySearch를 수행한다는 것이다.
-// pending vector에 있는 bk를 main vector에 삽입할 때, 그에 상응하는 ak 앞에 원소들에 대해서만 binary search를 수행하면 된다.
-// 예를 들어 b3를 삽입할 때, b3는 a3보다 작으므로 a3 앞에 있는 원소들에 대해서만 binary search를 수행하면 된다.
+// binary search for vector in order to find the position to insert
 int PmergeMe::binarySearchVector(int value) { // value is the element from the pending vector (bk)
 	int left = 0;
-
 	int right = mainVector.size() - 1;
-    /*
-        여기서 mainVector 범위 전체를 볼 것이 아니라,
-        pending vector에 있는 bk에 상응하는 ak 앞에 있는 원소들에 대해서만 binary search를 수행하는 것으로 바꾸면 된다 (즉 right 변수가 커버하는 범위를 바꿔야)
-        이를 위해서는 bk(여기서는 value)값에 상응하는 ak를 먼저 찾아내야한다. (elemPairsVector를 사용하면 될 듯)
-        그 후 mainVector에서 ak의 위치를 찾아내고, 그 위치를 right로 설정하면 된다.
-    */
     int correspondingAk;
     
-    // find element in elemPairsVector, which corresponds to the "value"
+    // find element in elemPairsVector, which corresponds to the "value" (= bk)
     for (size_t i = 0; i < elemPairsVector.size(); i++) {
         if (elemPairsVector[i].second == value) { // find bk in pendingVector
             correspondingAk = elemPairsVector[i].first; // then, find corresponding ak in mainVector
@@ -424,13 +413,11 @@ int PmergeMe::binarySearchVector(int value) { // value is the element from the p
             break;
         }
     }
-
+    
+    // binary search: find the position of bk in mainVector
 	while (left <= right)
 	{
 		int mid = (left + right) / 2;
-		// if (mainVector[mid] == value) { // 중복 방지했으므로 삭제
-		// 	return (mid);
-		// }
 		if (mainVector[mid] < value) {
 			left = mid + 1;
 		}
@@ -441,6 +428,7 @@ int PmergeMe::binarySearchVector(int value) { // value is the element from the p
 		return (left);
 }
 
+// insert the odd element to sorted vector
 void PmergeMe::insertOddElemVector() {
     std::cout << "insert odd element" << std::endl;
     if (input.size() % 2 != 0)
@@ -450,6 +438,9 @@ void PmergeMe::insertOddElemVector() {
     }
 }
 
+/*
+    fordJohnson for list
+*/
 void PmergeMe::fordJohnsonList() {
     std::cout << "|     LIST     |" << std::endl;
 	std::cout << "*** createPairsInDescending ***" << std::endl;
@@ -462,7 +453,7 @@ void PmergeMe::fordJohnsonList() {
 
 	std::cout << "*** splitPairsToMainPendingList ***" << std::endl;
     splitPairsToMainPendingList();
-	printAfterSplitList();
+	printAfterSplitingMainPendingList();
 
     std::cout << "*** insertionSortList ***" << std::endl;
 	insertionSortList();
@@ -471,6 +462,7 @@ void PmergeMe::fordJohnsonList() {
 	printMainList();
 }
 
+// split pairs to main and pending list
 void PmergeMe::splitPairsToMainPendingList() {
 	sortedList.clear();
 	pendingElementList.clear();
@@ -480,60 +472,75 @@ void PmergeMe::splitPairsToMainPendingList() {
 	}
 }
 
+// merge sort for list
 void PmergeMe::mergeSortList(std::list<std::pair<int, int> >::iterator left, std::list<std::pair<int, int> >::iterator right) {
-	std::list<std::pair<int, int> >::iterator nextLeft = left;
+	// nextLeft is the next element after left
+    std::list<std::pair<int, int> >::iterator nextLeft = left;
     nextLeft++;
-
+    
+    // if the range is zero or negative, no sorting is needed
     if (left == right || nextLeft == right) {
         return;
     }
-
+    
+    // calculate the middle index of the current range (divide and conquer)
 	std::list<std::pair<int, int> >::iterator mid = left;
-	std::advance(mid, std::distance(left, right) / 2);
+	std::advance(mid, std::distance(left, right) / 2); // advance: move iterator to the middle of the range
 
-	mergeSortList(left, mid);
-	mergeSortList(mid, right);
-	MergingList(left, mid, right);
+	mergeSortList(left, mid);   // recursively apply merge sort to the left half of the range
+	mergeSortList(mid, right);  // recursively apply merge sort to the right half of the range
+	mergeSortedHalvesList(left, mid, right); // merge the two halves together
 }
 
-void PmergeMe::MergingList(std::list<std::pair<int, int> >::iterator left, std::list<std::pair<int, int> >::iterator mid, std::list<std::pair<int, int> >::iterator right) {
-	std::list<std::pair<int, int> > tempList;
+// merge two sorted halves in list
+void PmergeMe::mergeSortedHalvesList(std::list<std::pair<int, int> >::iterator left, std::list<std::pair<int, int> >::iterator mid, std::list<std::pair<int, int> >::iterator right) {
+    // Create a temporary list to store the merged elements.
+    std::list<std::pair<int, int> > tempList;
+    
+    // Initialize iterators for the left and right halves.
+    std::list<std::pair<int, int> >::iterator leftPair = left;
+    std::list<std::pair<int, int> >::iterator rightPair = mid;
+    
+    // Merge the two halves into tempList. Continue until one of the halves is exhausted.
+    while (leftPair != mid && rightPair != right) {
+        // Compare the elements from each half and add the smaller one to tempList.
+        if (leftPair->first <= rightPair->first) {
+            tempList.push_back(*leftPair);
+            leftPair++;
+        }
+        else {
+            tempList.push_back(*rightPair);
+            rightPair++;
+        }
+    }
 
-	std::list<std::pair<int, int> >::iterator leftPair = left;
-	std::list<std::pair<int, int> >::iterator rightPair = mid;
+    // If there are remaining elements in the left half, add them to tempList.
+    while (leftPair != mid) {
+        tempList.push_back(*leftPair);
+        leftPair++;
+    }
 
-	while (leftPair != mid && rightPair != right) {
-		if (leftPair->first <= rightPair->first) {
-			tempList.push_back(*leftPair);
-			leftPair++;
-		}
-		else {
-			tempList.push_back(*rightPair);
-			rightPair++;
-		}
-	}
+    // If there are remaining elements in the right half, add them to tempList.
+    while (rightPair != right) {
+        tempList.push_back(*rightPair);
+        rightPair++;
+    }
 
-	while (leftPair != mid) {
-		tempList.push_back(*leftPair);
-		leftPair++;
-	}
-
-	while (rightPair != right) {
-		tempList.push_back(*rightPair);
-		rightPair++;
-	}
-	std::copy(tempList.begin(), tempList.end(), left);
+    // Copy the merged elements back to the original list starting from the left iterator.
+    std::copy(tempList.begin(), tempList.end(), left);
 }
 
+// insertion sort for list
 void PmergeMe::insertionSortList() {
 	createJacobsthalIndexes(pendingElementList.size());
 	printJacobsthalIndex();
 
-	InsertElementsWithJacobsthalIndexesList();
+	insertElementsWithJacobsthalIndexesList();
     insertOddElementList();
 }
 
-void PmergeMe::InsertElementsWithJacobsthalIndexesList() {
+// insert elements at Jacobsthal index positions in list
+void PmergeMe::insertElementsWithJacobsthalIndexesList() {
     for (size_t index = 0; index < jacobsthalIndexVector.size(); ++index) 
     {
         int jacobsthalIndex = jacobsthalIndexVector[index];
@@ -560,7 +567,7 @@ void PmergeMe::InsertElementsWithJacobsthalIndexesList() {
     pendingElementList.clear();
 }
 
-
+// insert the odd element in sorted list
 void PmergeMe::insertOddElementList() {
     std::cout << "insert odd element" << std::endl;
     if (input.size() % 2 != 0)
@@ -574,6 +581,7 @@ void PmergeMe::insertOddElementList() {
     }
 }
 
+// binary search helper for list sorting
 int PmergeMe::binarySearchList(int value) {
     if (sortedList.empty()) {
         return (0);
@@ -614,19 +622,7 @@ int PmergeMe::binarySearchList(int value) {
     return std::distance(sortedList.begin(), left);
 }
 
-// void PmergeMe::printInput() {
-//     std::cout << "input : [";
-//     for (std::vector<int>::iterator it = input.begin(); it != input.end(); ++it) {
-//         if (it != input.begin())
-//         {
-//             std::cout << ", ";
-//         }
-//         std::cout << *it;
-//     }
-//     std::cout << "]" << std::endl;
-// 	std::cout << std::endl;
-// }
-
+// print time spent for sorting
 void PmergeMe::printTime(std::string containerType, double time) {
 	std::cout << "Time to process a range of ";
 	std::cout << input.size();
@@ -635,8 +631,7 @@ void PmergeMe::printTime(std::string containerType, double time) {
 	std::cout << " us" << std::endl;
 }
 
-
-
+// debugging functions for vector
 void PmergeMe::printListPairs() {
 	std::list<std::pair<int, int> >::iterator it;
 	for (it = elemPairsList.begin(); it != elemPairsList.end(); it++) {
@@ -652,13 +647,13 @@ void PmergeMe::printListPairs() {
 	std::cout << std::endl;
 }
 
-void PmergeMe::printAfterSplitingMainPending() {
+void PmergeMe::printAfterSplitingMainPendingVector() {
 	printMainVector();
 	printPendingVector();
 	printOddElement();
 }
 
-void PmergeMe::printAfterSplitList() {
+void PmergeMe::printAfterSplitingMainPendingList() {
 	printMainList();
 	PrintPendingElementsList();
 	printOddElement();
