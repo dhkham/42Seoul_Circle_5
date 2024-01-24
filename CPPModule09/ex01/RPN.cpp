@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 18:53:22 by dkham             #+#    #+#             */
-/*   Updated: 2023/12/23 19:45:43 by dkham            ###   ########.fr       */
+/*   Updated: 2024/01/24 20:39:36 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,11 +29,13 @@ RPN::RPN(const std::string& expression) {
 }
 
 // Copy constructor
-RPN::RPN(const RPN& other) {} // Nothing to do here
-    
+RPN::RPN(const RPN& other) {
+    *this = other;
+}
+
 // Copy assignment operator
 RPN& RPN::operator=(const RPN& other) {
-    return *this; // Nothing to do here
+    if (this == &other) return *this;
 }
 
 // Destructor
@@ -84,7 +86,7 @@ int RPN::evaluate(const std::string& expression) {
 
     // Iterate over each token in the input expression
     while (iss >> token) {
-        // Check if the token is an operator
+        // Check if the token is an operator (+, -, *, /)
         if (isOperator(token)) {
             // Ensure there are at least two values on the stack for the operation
             if (values.size() < 2) {

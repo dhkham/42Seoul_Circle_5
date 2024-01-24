@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 18:48:58 by dkham             #+#    #+#             */
-/*   Updated: 2023/12/23 19:44:40 by dkham            ###   ########.fr       */
+/*   Updated: 2024/01/24 20:28:44 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 #include <string>
 #include <stack>
+#include <iostream>
 
 class RPN {
 public:
