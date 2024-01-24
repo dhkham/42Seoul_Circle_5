@@ -6,11 +6,13 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 18:48:36 by dkham             #+#    #+#             */
-/*   Updated: 2024/01/24 20:29:27 by dkham            ###   ########.fr       */
+/*   Updated: 2024/01/24 20:43:14 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "RPN.hpp"
+
+// 10 넘는 수 에러
 
 int main(int argc, char* argv[]) {
     // Check if the input provided through command line arguments is valid

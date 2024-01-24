@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 18:53:22 by dkham             #+#    #+#             */
-/*   Updated: 2024/01/24 20:39:36 by dkham            ###   ########.fr       */
+/*   Updated: 2024/01/24 20:42:47 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,10 @@ RPN::RPN(const RPN& other) {
 
 // Copy assignment operator
 RPN& RPN::operator=(const RPN& other) {
-    if (this == &other) return *this;
+    if (this != &other) {
+        // Copy the data members from the other object
+    }
+    return *this;
 }
 
 // Destructor
