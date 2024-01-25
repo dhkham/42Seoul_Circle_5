@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 18:48:36 by dkham             #+#    #+#             */
-/*   Updated: 2024/01/24 20:43:14 by dkham            ###   ########.fr       */
+/*   Updated: 2024/01/25 17:17:20 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,8 @@ int main(int argc, char* argv[]) {
         std::cout << "Usage: ./RPN <expression>\n";
         return 1;
     }
+    
+    // check if the 
     RPN calculator;
     try {
         // Evaluate the expression and print the result

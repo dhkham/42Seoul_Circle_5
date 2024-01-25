@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 18:53:22 by dkham             #+#    #+#             */
-/*   Updated: 2024/01/24 20:42:47 by dkham            ###   ########.fr       */
+/*   Updated: 2024/01/25 17:59:10 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -106,8 +106,19 @@ int RPN::evaluate(const std::string& expression) {
                 // If the token is not a valid number, throw an error
                 throw std::runtime_error("Invalid expression: invalid input '" + token + "'");
             }
-            // Convert the token to an integer and push it onto the stack
-            values.push(std::stoi(token));
+
+            // Convert the token to an integer using stringstream
+            std::istringstream converter(token);
+            int number;
+            converter >> number;
+
+            // Check if the number is over 10
+            if (number >= 10) {
+                throw std::runtime_error("Invalid expression: number should be less than 10");
+            }
+
+            // Push the converted number onto the stack
+            values.push(number);
         }
     }
 
