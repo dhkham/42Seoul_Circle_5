@@ -28,7 +28,7 @@ BitcoinExchange::~BitcoinExchange() {}
 
 // Loads exchange rates from a CSV file into the exchangeRates map.
 void BitcoinExchange::loadExchangeRatesFromCsv(const std::string& filename) {
-    std::ifstream file(filename); // Open the file.
+    std::ifstream file(filename.c_str()); // Open the file.
     std::string line, date;       // Variables for reading the file.
     double rate;
 
@@ -38,7 +38,7 @@ void BitcoinExchange::loadExchangeRatesFromCsv(const std::string& filename) {
         exit(1);
     }
 
-    getline(file, line); // Skip the header line.
+    getline(file, line); // Skip the header line, which contains column names.
 
     // Read each line from the file.
     while (getline(file, line)) {
@@ -99,7 +99,7 @@ bool BitcoinExchange::isValidDate(const std::string& date) {
 
     int year, month, day;
     std::istringstream dateStream(date);
-    dateStream >> year;
+    dateStream >> year; 
     dateStream.ignore(); // Ignore the dash
     dateStream >> month;
     dateStream.ignore(); // Ignore the dash
@@ -123,8 +123,8 @@ bool BitcoinExchange::isValidDate(const std::string& date) {
 
 // Processes each line in the input file to calculate and print the Bitcoin value.
 void BitcoinExchange::processInputFile(const std::string& filename) {
-    std::ifstream file(filename); // Open the input file.
-    std::string line, date, valueStr;
+    std::ifstream file(filename.c_str()); // Open the input file.
+    std::string line, date;
     double value;
 
     // Check if the file is open, exit with an error message if not.
@@ -135,17 +135,23 @@ void BitcoinExchange::processInputFile(const std::string& filename) {
 
     // Read each line from the file.
     while (getline(file, line)) {
-        std::istringstream iss(line);
-        // Parse date and value from the line, display an error for bad input.
-        if (!getline(iss, date, '|') || !(iss >> value)) {
+        // Check for the correct format "date | value"
+        size_t delimiterPos = line.find(" | ");
+        if (delimiterPos == std::string::npos) { // if the delimiter is not found
+            std::cout << "Error: bad input => " << line << std::endl;
+            continue; // continue is used to skip the rest of the code in the while loop and start again with the next iteration.
+        }
+
+        // Extract date and value strings
+        date = line.substr(0, delimiterPos); // from the beginning of the line to the delimiter
+        std::string valueStr = line.substr(delimiterPos + 3); // +3 to skip " | " and get the value
+
+        std::istringstream iss(valueStr);
+        // Parse value from the value string
+        if (!(iss >> value)) { // if the value is not a number
             std::cout << "Error: bad input => " << line << std::endl;
             continue;
         }
-
-        // Trim leading spaces from the date string.
-        date.erase(0, date.find_first_not_of(" \t")); // finds the first character that is not a space or tab and erases everything before it
-        // Trim trailing spaces from the date string.
-        date.erase(date.find_last_not_of(" \t") + 1); // finds the last character that is not a space or tab and erases everything after it
 
         // Validate the date, ensuring it's in the correct format.
         if (!isValidDate(date)) {
