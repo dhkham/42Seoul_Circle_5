@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/23 18:53:22 by dkham             #+#    #+#             */
-/*   Updated: 2024/01/25 17:59:10 by dkham            ###   ########.fr       */
+/*   Updated: 2024/01/25 18:16:05 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,6 +102,7 @@ int RPN::evaluate(const std::string& expression) {
             values.push(performOperation(a, b, token));
         } else {
             // If the token is not an operator, it must be a number
+            // push the token onto the stack if it is a valid number
             if (!isNumber(token)) {
                 // If the token is not a valid number, throw an error
                 throw std::runtime_error("Invalid expression: invalid input '" + token + "'");
@@ -123,6 +124,7 @@ int RPN::evaluate(const std::string& expression) {
     }
 
     // After processing all tokens, check if there is exactly one value left on the stack
+    // the one value left on the stack is the final result
     if (values.size() != 1) throw std::runtime_error("Invalid expression");
     // Return the final value from the stack
     return values.top();
