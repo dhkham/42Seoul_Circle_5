@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/22 17:09:17 by dkham             #+#    #+#             */
-/*   Updated: 2023/12/23 19:48:13 by dkham            ###   ########.fr       */
+/*   Updated: 2024/01/25 18:19:05 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,11 @@
 
 #include <string>
 #include <map>
+#include <fstream>
+#include <sstream>
+#include <iostream>
+#include <limits>
+#include <cmath>
 
 class BitcoinExchange {
 public:

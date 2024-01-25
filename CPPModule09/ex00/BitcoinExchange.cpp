@@ -1,9 +1,4 @@
 #include "BitcoinExchange.hpp"
-#include <fstream>
-#include <sstream>
-#include <iostream>
-#include <limits>
-#include <cmath>
 
 // Constructor for the BitcoinExchange class.
 BitcoinExchange::BitcoinExchange() {}
@@ -15,11 +10,17 @@ BitcoinExchange::BitcoinExchange(const std::string& ratesFile, const std::string
 }
 
 // Copy constructor
-BitcoinExchange::BitcoinExchange(const BitcoinExchange& other) {} // Nothing to do here
+BitcoinExchange::BitcoinExchange(const BitcoinExchange& other) {
+    *this = other;
+}
 
 // Copy assignment operator
 BitcoinExchange& BitcoinExchange::operator=(const BitcoinExchange& other) {
-    return *this; // Nothing to do here
+    if (this != &other) {
+        // Copy the data members from the other object
+        exchangeRates = other.exchangeRates;
+    }
+    return *this;
 }
 
 // Destructor
