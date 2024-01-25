@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 20:32:09 by dkham             #+#    #+#             */
-/*   Updated: 2024/01/24 20:06:00 by dkham            ###   ########.fr       */
+/*   Updated: 2024/01/25 21:15:44 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -218,7 +218,7 @@ void PmergeMe::printVectorPairs() {
 
 // run merge sort based on first element of vector
 void PmergeMe::mergeSortVector(int left, int right) {
-    // Base case: if the range is zero or negative, no sorting is needed
+    // Base case: no sorting is needed if the range is zero or negative (stop recursion when only one element is left)
     if (left >= right)
         return;
     
@@ -256,7 +256,7 @@ void PmergeMe::mergeSortedHalvesVector(int left, int mid, int right) {
     int indexLeft = 0, indexRight = 0, mergeIndex = left;
 
     // Merge the temporary vectors back into elemPairsVector
-    while (indexLeft < leftSize && indexRight < Rightsize) {
+    while (indexLeft < leftSize && indexRight < Rightsize) { // while there are elements in both vectors
         if (leftPair[indexLeft].first <= rightPair[indexRight].first) { // compare the first elements of the pairs
             elemPairsVector[mergeIndex] = leftPair[indexLeft++]; // if the left element is smaller, copy it to elemPairsVector
         } else { 
@@ -313,27 +313,27 @@ void PmergeMe::createJacobsthalIndexes(int pendingElementSize) {
     int i = 1;
     while (true) {
         i++;
-        int number = jacobsthal(i); // Compute the ith Jacobsthal number
+        int number = jacobsthal(i); // Compute the ith Jacobsthal number (starting from i=2)
         jacobsthalNumbers.push_back(number); // Add it to the vector
         if (number > pendingElementSize) // If jacobsthal(i) is greater than pendingElementSize, stop
             break;
     }  
 
     // Set for tracking used numbers to avoid duplicates
-    std::set<int> used;
+    std::set<int> usedNum;
     // Start with the first index
     jacobsthalIndexVector.push_back(1);
-    used.insert(1);
+    usedNum.insert(1);
 
     // Initialize number with the first Jacobsthal number
-    int number = jacobsthalNumbers.front();
+    int number = jacobsthalNumbers.front(); // .front() returns the first element of the vector
     // Populate the Jacobsthal index vector
     while (true) {
-        if (used.find(number) == used.end()) {
+        if (usedNum.find(number) == usedNum.end()) { // If the number is not used, add it to the jacobsthalIndexVector (also to usedNum set)
             jacobsthalIndexVector.push_back(number);
-            used.insert(number);
+            usedNum.insert(number);
             number--;
-        } else {
+        } else {    // If the number is used, find the next Jacobsthal number
             // If no more Jacobsthal numbers, break the loop
             if (jacobsthalNumbers.empty())
                 break;
@@ -362,7 +362,7 @@ int PmergeMe::jacobsthal(int n) {
 
     // Iteratively calculate the Jacobsthal number up to n
     for (int index = 2; index <= n; index++) {
-        currentTerm = previousTerm + 2 * twoTermsAgo;
+        currentTerm = previousTerm + 2 * twoTermsAgo; // Jacobsthal sequence: ak = ak-1 + 2 * ak-2
         
         // Update terms for next iteration
         twoTermsAgo = previousTerm;

@@ -6,13 +6,12 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 19:35:09 by dkham             #+#    #+#             */
-/*   Updated: 2024/01/24 20:06:31 by dkham            ###   ########.fr       */
+/*   Updated: 2024/01/25 20:49:12 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "PmergeMe.hpp"
 
-// merge sort 이해하기
 // list 작동방식 이해하기
 
 int main(int argc, char** argv)
