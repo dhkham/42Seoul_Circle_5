@@ -69,13 +69,15 @@ void BitcoinExchange::loadExchangeRatesFromCsv(const std::string& filename) {
 // Finds the closest date in the exchangeRates map that is less than or equal to the given date.
 std::string BitcoinExchange::findClosestDate(const std::string& date) {
     // Iterator to traverse the map.
+    // lower_bound returns an iterator to the first element in the map whose key is not considered to go before date (i.e., either it is equivalent or goes after).
     std::map<std::string, double>::const_iterator it = exchangeRates.lower_bound(date);
 
     // Adjust the iterator to find the closest lower date if the exact date is not found.
+    // if the iterator is not at the beginning of the map and the date is not found in the map, decrement the iterator to get the closest lower date.
     if (it != exchangeRates.begin() && (it == exchangeRates.end() || it->first != date)) {
         --it;
     }
-    return it->first; // Return the closest date.
+    return it->first; // Return the date.
 }
 
 // Calculates the Bitcoin value based on the exchange rate and prints it.
