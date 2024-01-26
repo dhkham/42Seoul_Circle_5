@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 20:32:09 by dkham             #+#    #+#             */
-/*   Updated: 2024/01/25 21:15:44 by dkham            ###   ########.fr       */
+/*   Updated: 2024/01/26 16:40:07 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ PmergeMe::PmergeMe(): input()
 	, mainVector()
 	, pendingVector()
 	, elemPairsList()
-	, sortedList()
-	, pendingElementList()
+	, mainList()
+	, pendingList()
 {}
 
 // Copy constructor
@@ -33,8 +33,8 @@ PmergeMe::PmergeMe(const PmergeMe& other)
 	, mainVector(other.mainVector)
 	, pendingVector(other.pendingVector)
 	, elemPairsList(other.elemPairsList)
-	, sortedList(other.sortedList)
-	, pendingElementList(other.pendingElementList)
+	, mainList(other.mainList)
+	, pendingList(other.pendingList)
 {}
 
 // Copy assignment operator
@@ -49,8 +49,8 @@ PmergeMe& PmergeMe::operator=(const PmergeMe& other) {
 		mainVector = other.mainVector;
 		pendingVector = other.pendingVector;
 		elemPairsList = other.elemPairsList;
-		sortedList = other.sortedList;
-		pendingElementList = other.pendingElementList;
+		mainList = other.mainList;
+		pendingList = other.pendingList;
 	}
 	return (*this);
 }
@@ -317,7 +317,7 @@ void PmergeMe::createJacobsthalIndexes(int pendingElementSize) {
         jacobsthalNumbers.push_back(number); // Add it to the vector
         if (number > pendingElementSize) // If jacobsthal(i) is greater than pendingElementSize, stop
             break;
-    }  
+    }
 
     // Set for tracking used numbers to avoid duplicates
     std::set<int> usedNum;
@@ -464,11 +464,11 @@ void PmergeMe::fordJohnsonList() {
 
 // split pairs to main and pending list
 void PmergeMe::splitPairsToMainPendingList() {
-	sortedList.clear();
-	pendingElementList.clear();
+	mainList.clear();
+	pendingList.clear();
 	for (std::list<std::pair<int, int> >::iterator it = elemPairsList.begin(); it != elemPairsList.end(); ++it) {
-		sortedList.push_back(it->first);
-		pendingElementList.push_back(it->second);
+		mainList.push_back(it->first);
+		pendingList.push_back(it->second);
 	}
 }
 
@@ -532,7 +532,7 @@ void PmergeMe::mergeSortedHalvesList(std::list<std::pair<int, int> >::iterator l
 
 // insertion sort for list
 void PmergeMe::insertionSortList() {
-	createJacobsthalIndexes(pendingElementList.size());
+	createJacobsthalIndexes(pendingList.size());
 	printJacobsthalIndex();
 
 	insertElementsWithJacobsthalIndexesList();
@@ -545,7 +545,7 @@ void PmergeMe::insertElementsWithJacobsthalIndexesList() {
     {
         int jacobsthalIndex = jacobsthalIndexVector[index];
 
-        std::list<int>::iterator valueIt = pendingElementList.begin();
+        std::list<int>::iterator valueIt = pendingList.begin();
         std::advance(valueIt, jacobsthalIndex - 1);
         int value = *valueIt;
 
@@ -556,15 +556,15 @@ void PmergeMe::insertElementsWithJacobsthalIndexesList() {
 		std::cout << "Before: " << std::endl;
 		printMainList();
 
-        std::list<int>::iterator it = sortedList.begin();
+        std::list<int>::iterator it = mainList.begin();
         std::advance(it, position);
-        sortedList.insert(it, value);
+        mainList.insert(it, value);
 
 		std::cout << "After: " << std::endl;
 		printMainList();
     }
 
-    pendingElementList.clear();
+    pendingList.clear();
 }
 
 // insert the odd element in sorted list
@@ -574,52 +574,71 @@ void PmergeMe::insertOddElementList() {
 	{
         int position = binarySearchList(oddElement);
 
-        std::list<int>::iterator it = sortedList.begin();
+        std::list<int>::iterator it = mainList.begin();
         std::advance(it, position);
-        sortedList.insert(it, oddElement);
+        mainList.insert(it, oddElement);
 
     }
 }
 
-// binary search helper for list sorting
 int PmergeMe::binarySearchList(int value) {
-    if (sortedList.empty()) {
-        return (0);
+    // Check if the sorted list is empty. If it is, there's no place to search, so return 0
+    if (mainList.empty()) {
+        return 0;
     }
 
-    std::list<int>::iterator left = sortedList.begin();
-    std::list<int>::iterator right = sortedList.end();
-    right--; 
+    int correspondingAk;
+    // Iterate through elemPairsList to find the pair where the second element matches 'value'
+    for (std::list<std::pair<int, int> >::const_iterator it = elemPairsList.begin(); it != elemPairsList.end(); ++it) {
+        if (it->second == value) {
+            correspondingAk = it->first; // When found, store the first element of the pair
+            break; // Break the loop as we have found the element
+        }
+    }
+
+    // Initialize iterators for the start (left) and end (right) of the search range
+    std::list<int>::iterator left = mainList.begin();
+    std::list<int>::iterator right = mainList.end();
+
+    // Iterate through mainList to find the position of correspondingAk
+    std::list<int>::iterator correspondingIt;
+    for (correspondingIt = mainList.begin(); correspondingIt != mainList.end(); ++correspondingIt) {
+        if (*correspondingIt == correspondingAk) {
+            break; // Break the loop when the correspondingAk is found
+        }
+    }
+
+    // If we find correspondingAk in the mainList, set 'right' to its position
+    if (correspondingIt != mainList.end()) {
+        right = correspondingIt;
+    }
+
+    // Declare an iterator 'mid' to represent the middle of the current search range
     std::list<int>::iterator mid;
-    
-    int remainingElements = std::distance(left, right) + 1;
+    // Calculate the number of elements in the current search range
+    int remainingElements = std::distance(left, right);
 
-    while (remainingElements > 0 && left != sortedList.end() && std::distance(left, right) >= 0)
-    {
-        int moveDistance = remainingElements / 2;
-        mid = left;
-        std::advance(mid, moveDistance);
+    // Perform binary search within the range defined by 'left' and 'right'
+    while (remainingElements > 0 && left != right) {
+        int moveDistance = remainingElements / 2; // Calculate the distance to the middle
+        mid = left; // Start from 'left'
+        std::advance(mid, moveDistance); // Move 'mid' to the middle position
 
-        if (*mid == value) // 삭제?
-        {
-            return std::distance(sortedList.begin(), mid);
+        // If the middle element is less than the value, adjust the left boundary
+        if (*mid < value) {
+            std::advance(left, moveDistance + 1); // Move left to the right of 'mid'
+            remainingElements -= (moveDistance + 1); // Update the count of remaining elements
         }
-        else if (*mid < value)
-        {
-            std::advance(left, moveDistance + 1);
-            remainingElements -= (moveDistance + 1);
-        }
-        else
-        {
-            if (mid == sortedList.begin()) {
-				break;
-			}
+        else {
+            // If the middle element is greater or equal, adjust the right boundary
             right = mid;
-            right--;
+            // Update the count of remaining elements to the left half
             remainingElements = moveDistance;
         }
     }
-    return std::distance(sortedList.begin(), left);
+
+    // Return the position (as a distance from the beginning) where 'value' should be inserted
+    return std::distance(mainList.begin(), left);
 }
 
 // print time spent for sorting
@@ -719,7 +738,7 @@ void PmergeMe::printInsertionDetails(int jacobsthalIndex, int value, int positio
 
 void PmergeMe::printMainList() {
     std::cout << "Main List: NULL <-> ";
-    for (std::list<int>::iterator it = sortedList.begin(); it != sortedList.end(); ++it)
+    for (std::list<int>::iterator it = mainList.begin(); it != mainList.end(); ++it)
     {
         std::cout << "[" << *it << "] <-> ";
     }
@@ -729,7 +748,7 @@ void PmergeMe::printMainList() {
 
 void PmergeMe::PrintPendingElementsList() {
     std::cout << "Pending List: NULL <-> ";
-    for (std::list<int>::iterator it = pendingElementList.begin(); it != pendingElementList.end(); ++it)
+    for (std::list<int>::iterator it = pendingList.begin(); it != pendingList.end(); ++it)
     {
         std::cout << "[" << *it << "] <-> ";
     }

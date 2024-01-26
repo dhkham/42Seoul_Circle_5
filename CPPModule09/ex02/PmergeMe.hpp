@@ -6,7 +6,7 @@
 /*   By: dkham <dkham@student.42.fr>                +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/12/27 19:35:03 by dkham             #+#    #+#             */
-/*   Updated: 2024/01/24 20:05:29 by dkham            ###   ########.fr       */
+/*   Updated: 2024/01/26 16:37:24 by dkham            ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,9 +126,9 @@ class PmergeMe
         // Stores element pairs for list-based sorting
         std::list<std::pair<int, int> > elemPairsList;
         // Stores the sorted sequence for list
-        std::list<int> sortedList;
+        std::list<int> mainList;
         // Stores pending elements for list sorting
-        std::list<int> pendingElementList;
+        std::list<int> pendingList;
 };
 
 #endif
